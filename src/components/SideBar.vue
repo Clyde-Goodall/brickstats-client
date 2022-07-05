@@ -1,4 +1,5 @@
 <template>
+<!-- To be used as a sub router for the dashboard. -->
     <div class="max-w-96 w-72 bg-gray-800 text-white h-full overflow-y-hidden flex-wrap">
         <a class="opt" name="charts" @click="swapView('charts')">Charts</a>
         <a class="opt" name="details" @click="swapView('details')">Details</a>

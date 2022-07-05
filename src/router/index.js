@@ -5,6 +5,9 @@ import DashboardView from '../views/DashboardView.vue';
 import ChartView from '../views/subviews/ChartView.vue';
 import DetailView from '../views/subviews/DetailView.vue';
 
+// Most of this is self explanatory
+// Import route -> make route entry -> point it to the component. You SHOULD be able to add middlewares in here too but fuck me I guess
+// the this.$router object is available in all vue components 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

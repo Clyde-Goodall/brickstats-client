@@ -1,4 +1,5 @@
 <template>
+<!-- Reusable Bar Chart implementation. -->
     <div class="w-auto max-h-1/3 h-auto shadow-md rounded-lg px-12 py-3 box-border">
         <Bar 
             :chartOptions="chartOptions"
@@ -31,6 +32,7 @@ export default {
     },
   
   mounted() {
+    //pulls data from prop 
     this.chartData.labels = this.cdata.names;
     this.chartData.datasets = [ { 
         backgroundColor: 'rgba(20,30,90,1)',
@@ -40,6 +42,7 @@ export default {
   },
   data() {
     return {
+    // declaration of chart data before it gets defined because of reasons
       chartData: {
         labels: [],
         datasets: [],
@@ -68,6 +71,7 @@ export default {
                 }
             }
         },
+        //oom is really fucked up on here so don't use it for now
         plugins: {
             legend: {
                 display: false,

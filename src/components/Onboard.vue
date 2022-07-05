@@ -13,6 +13,7 @@
             <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret"/>
             <input type="text" name="token" placeholder="Consumer Key" v-model="key.ckey"/>
             <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.csecret"/>
+            <!-- @ binding for event listener. can also be used with keystrokes  -->
             <input type="button" class="add-button" @click="triggerOnboard" value="Add">
         </div>
     </div>
@@ -20,29 +21,25 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
-import BarChart from "./BarChart.vue";
 
 export default {
-    components: { BarChart },
     data() {
         return {
+            // ONLY for 
             key: {
-                value: '9E031212F4DB4C09881CB1AB31ED33F8',
-                secret: 'BF6548AA5CC24597923C9C596187101F',
-                ckey: '',
-                csecret: '',
+                value: 'I4UT57U2OH2458GO4U3LUIWETWGW',
+                secret: 'RJGHUI6853G522IPHTG92URHTG9UETHOG28UE',
+                ckey: '744QOIUF4H',
+                csecret: '983IHJGOIUR2LQ',
             }
         }
     },
     methods: {
+        //makes function to test cred validity available
         ...mapActions(['initUserOnboard']),
         async triggerOnboard() {
             const onb = await this.initUserOnboard(this.key);
         }
-    },
-    computed: {
-        ...mapState(["transforms_data"]),
-        ...mapGetters(['isDataAvailable']),
     },
 }
 </script>

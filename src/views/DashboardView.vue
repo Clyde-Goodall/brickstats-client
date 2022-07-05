@@ -1,4 +1,5 @@
 <template>
+<!-- Must be user to view this -->
     <div class="w-full h-screen">
          <Top :name="this.$route.name"></Top>
         <div class="flex flex-row h-full">
@@ -7,17 +8,16 @@
             </div>
             <!-- the meat and potaters (charts/stats) -->
             <div class="h-full w-full overflow-y-auto" v-if="isDataAvailable">
+            <!-- Sidebar will route between views here  -->
                 <router-view :key="$route.fullPath">
                 </router-view>
             </div>
-        </div>
-        <!-- sidebar region -->
-        
+        </div>        
    </div>
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 //components
 import Top from "../components/Top.vue";
@@ -27,6 +27,7 @@ export default {
     components: { Top, BarChart, SideBar },
     data() {
         return {
+            //preset some chart options 
              options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -44,17 +45,5 @@ export default {
             }
         }
     },
-    mounted() {
-        if(!this.isDataAvailable) {
-            this.$router.push('/');
-        }
-    },
-    computed: {
-        ...mapState(['transforms_data']),
-        ...mapGetters(['isDataAvailable']),
-        cdata() {
-            return JSON.parse(JSON.stringify(this.transforms_data.monthly));
-        }
-    }
 }
 </script>

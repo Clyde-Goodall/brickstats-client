@@ -1,4 +1,5 @@
 <template>
+<!-- First thing new users will see. Component is called from /src/router/index.js -->
     <div class="w-full">
         <Top :name="this.$route.name"></Top>
         <Body></Body>
@@ -13,12 +14,8 @@ import Top from "../components/Top.vue";
 import Body from "../components/Body.vue";
 export default {
     components: { Top, Body },
-    mounted() {
-        // if(this.isDataAvailable) {
-        //     this.$router.push('/dashboard');
-        // }
-    },
     computed: {
+        //refer to mapped function with this.thing i.e. this.isDataAvailable
         ...mapGetters(['isDataAvailable'])
     }
 }

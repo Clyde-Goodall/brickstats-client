@@ -1,21 +1,21 @@
 <template>
+<!--  This should be reworked for better organization. Don't really need to have this be used for one component tbh -->
     <div class="w-full flex flex-column justify-center bg-slate-50">
         <div class="inner-container">
-            <Upload></Upload>
+            <Onboard></Onboard>
         </div>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import Upload from "./Upload.vue";
+import Onboard from './Onboard.vue';
 export default {
-    components: { Upload },
+    components: { Onboard },
     methods: {
         
     },
     computed: {
-        ...mapState(['transforms_data']),
         ...mapGetters(['isDataAvailable'])
     }
 }
