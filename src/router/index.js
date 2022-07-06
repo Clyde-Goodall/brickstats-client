@@ -4,9 +4,10 @@ import HomeView from '../views/HomeView.vue';
 import DashboardView from '../views/DashboardView.vue';
 import ChartView from '../views/subviews/ChartView.vue';
 import DetailView from '../views/subviews/DetailView.vue';
+import SecretView from '../views/SecretView.vue';
 
 // Most of this is self explanatory
-// Import route -> make route entry -> point it to the component. You SHOULD be able to add middlewares in here too but fuck me I guess
+// Import route component -> make route entry -> point it to the component. You SHOULD be able to add middlewares in here too but fuck me I guess
 // the this.$router object is available in all vue components 
 
 const router = createRouter({
@@ -47,6 +48,11 @@ const router = createRouter({
         }
       ]
     },
+    {
+      path: '/topsecret',
+      name: 'Top Secret',
+      component: SecretView,
+    }
   ]
 })
 

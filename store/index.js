@@ -18,17 +18,28 @@ export let store = createStore({
             secret: null,
             ckey: null,
             csecret: null,
-        }
+        },
+        secret: {
+            orders: null,
+            inventory: null,
+        },
     },
     mutations: {
         //will set all api key/token info for onboarding process. 
-        // By the time user has been created, their api creds will already be stored in db;
+        //by the time user has been created, their api creds will already be stored in db;
         setApiDetails(state, data) {
             if(state.keys.token !== undefined && state.keys.secret !== undefined) {
                 state.keys.token = data.token;
                 state.keys.secret = data.secret;
                 state.keys.ckey = data.ckey;
                 state.csecret = data.csecret;
+            }
+        },
+        //temporary api pulling for 
+        setSecretData(state, data) {
+            console.log(data);
+            if(data) {
+                state.secret.orders = data.data.data;
             }
         }
     },
@@ -38,6 +49,11 @@ export let store = createStore({
             const whitelist_check = await inst.initOnboard(keys);
             //this just sets the values. Vue has some oddball state stuff but it is convenient so I'm not complaining.
             commit('setApiDetails', keys);
+        },
+        async getTopSecret({commit}) {
+            const data = await inst.getSecretData('/topsecret');
+            console.log(data);
+            commit('setSecretData', data);
         }
     },
     getters: {

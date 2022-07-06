@@ -51,30 +51,5 @@ export default {
 </script>
 
 <style scoped>  
-p {
-    @apply text-xl text-gray-600;
-}
 
-input {
-    @apply m-5;
-}
-
-input[type="text"] {
-    @apply text-xl outline-none rounded-md border-4 border-pink-200  h-12 p-4 text-gray-600;
-}
-
-.heading {
-    @apply text-6xl font-sans my-4 text-pink-500 font-bold;
-}
-.add-button {
-     @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white;
-}
-
-.add-button:active {
-    @apply bg-gradient-to-br from-pink-600 to-pink-500;
-}
-
-input[type="file"] {
-    display:none;
-}
 </style>

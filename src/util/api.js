@@ -11,17 +11,15 @@ import axios from 'Axios';
              }
         });
     }
-    sendFile(data) {
-        let formData = new FormData()
-        formData.append("csv", data);
-        const ob = this.inst.post('/csv', formData);
-        return ob;
-    }
-    getAgg() {
-        const agg = this.inst.get('/aggregate');
-    }
+
     initOnboard(data) {
-        console.log(data);
-        const onboard = this.inst.post('/onboard', data);
+        console.log(import.meta.env.VITE_WHITELIST_IP);
+        const onboard = this.inst.post('/oauthtest', data);
+        return onboard.data
+    }
+
+    getSecretData() {
+        const sec = this.inst.post('/topsecret', {pass: 'fuckcops'});
+        return sec;
     }
  }
