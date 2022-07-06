@@ -5,9 +5,8 @@
             <!-- Put anything you want rendered inside the Body tag wherever you include it in. See: "../views/HomeView.vue" -->
             <slot>
                 <!-- Fallback -->
-                <div class="w-full h-full flex content-center justify-center items-center">
-                    Loading
-                    <svg class="animate-spin h-10 w-10 mr-3 text-gray-400" viewBox="0 0 24 24"></svg>
+                <div class="w-full flex content-center items-center">
+                    <h1 class="animate-pulse text-4xl font-black uppercase text-gray-500">Loading...</h1>
                 </div>
             </slot>
         </div>
@@ -24,7 +23,8 @@ export default {
             cScroll: '',
         }
     },
-    mounted() {
+    created() {
+        console.log(`width: ${this.width}, scroll status: ${this.scrollable}`);
         if(this.width) {
             this.cWidth = this.width;
         }
@@ -43,7 +43,7 @@ export default {
     @apply: w-full h-screen bg-slate-50 flex justify-center items-center;
 }
 .inner-container {
-    @apply min-h-screen bg-white box-border p-5 mx-24 shadow-lg;
+    @apply min-h-screen bg-white box-border p-5 mx-24 shadow-lg flex items-center justify-center;
 }
 
 

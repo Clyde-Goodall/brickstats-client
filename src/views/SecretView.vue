@@ -2,21 +2,8 @@
 <!-- First thing new users will see. Component is called from /src/router/index.js -->
     <div class="w-full">
         <Top :name="this.$route.name"></Top>
-        <Body width="w-full" scrollable="true">
-            <div class="w-full">
-            <table class="table-auto" v-if="getOrderInfo">
-                <thead>
-                    <tr>
-                        <th class="text-sm w-auto" v-for="field in getFieldNames">{{field}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr  v-for="item in getOrderInfo" :key="item.order_id">
-                        <td class=" border-r w-auto" v-for="cat in Object.getOwnPropertyNames(item)"> {{item[cat]}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
+        <Body width="w-screen" scrollable="true">
+           <input type="button" @click="getCsv" class="add-button" v-if="ordersAvailable" value="Let's Get This Shit">
         </Body>     
        
     </div>
@@ -30,56 +17,86 @@ import Top from '../components/Top.vue';
 import Body from '../components/Body.vue';
 export default {
     components: { Top, Body },
+    data() {
+        return {
+            csvData: null,
+        }
+    },
     async created() {
         const data = await this.getTopSecret();
     },
-
     methods: {
         ...mapActions(['getTopSecret']),
         flattenJson(data) {
             const flatten = (obj, prefix = [], current = {}) => {
                 if (typeof(obj) === 'object' && obj !== null) {
                     for (const key of Object.keys(obj)) {
-                    flatten(obj[key], prefix.concat(key), current)
+                        flatten(obj[key], prefix.concat(key), current)
                     }
-                } else {
-                    current[prefix.join('.')] = obj
+                } 
+                else {
+                    current[prefix.join('.')] = obj;
                 }
-                return current
-                }
-
-                console.log(flatten({
-                a: [{
-                    b: ["c", "d"]
-                }]
-            }));
-            console.log(flatten([1, [2, [3, 4], 5], 6]));
-            return flatten(data);
+                    return current;
+            }
+            let flat = flatten(data);
+        return flatten(data);
         },
+        getCsv() {
+            const orders = this.$store.state.secret.orders;
+            let newobj = [];
+            let csv;
+            if(orders) {
+                orders[0] = this.flattenJson(orders[0]);
+                const names = Object.getOwnPropertyNames(orders[0]);
+                orders.forEach(o => {
+                    newobj.push(this.flattenJson(o));
+                });
+                for(let row = 0; row < newobj.length; row++){
+                    let keysAmount = Object.keys(newobj[row]).length
+                    let keysCounter = 0
+
+                    // If this is the first row, generate the headings
+                    if(row === 0){
+                        // Loop each property of the object
+                        for(let key in newobj[row]){
+
+                            // This is to not add a comma at the last cell
+                            // The '\r\n' adds a new line
+                            csv += key + (keysCounter+1 < keysAmount ? ',' : '\r\n' )
+                            keysCounter++
+                        }
+                    }else{
+                        for(let key in newobj[row]){
+                            csv += newobj[row][key] + (keysCounter+1 < keysAmount ? ',' : '\r\n' )
+                            keysCounter++
+                        }
+                    }
+
+                    keysCounter = 0
+                }
+                let link = document.createElement('a')
+                link.id = 'download-csv'
+                link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
+                link.setAttribute('download', 'yourfiletextgoeshere.csv');
+                document.body.appendChild(link)
+                document.querySelector('#download-csv').click()
+            }
+        }
     },
     computed: {
         ...mapState(['secret']),
-        getOrderInfo() {
-            let newobj = {};
-            const orders = this.$store.state.secret.orders;
-            if(orders) {
-                orders.forEach(o => {
-                    newobj.join(this.flattenJson(o));
-                })
-            }
-           
-            return newobj;
+        ordersAvailable() {
+           return this.$store.state.secret.orders ? true : false;
         },
         getFieldNames() {
-            let newobj = {};
             const orders = this.$store.state.secret.orders;
-            newobj = this.flattenJson(orders);
             if(orders) {
-                orders[0] = this.flattenJson(orders[0])
+                orders[0] = this.flattenJson(orders[0]);
+                const names = Object.getOwnPropertyNames(orders[0]);
+                return names;
             }
-            const names = Object.getOwnPropertyNames(newobj[0]);
-            console.log(names)
-            return names;
+            return 'Loading...';
         },
     }
 }

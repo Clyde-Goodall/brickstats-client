@@ -37,7 +37,6 @@ export let store = createStore({
         },
         //temporary api pulling for 
         setSecretData(state, data) {
-            console.log(data);
             if(data) {
                 state.secret.orders = data.data.data;
             }
@@ -52,7 +51,6 @@ export let store = createStore({
         },
         async getTopSecret({commit}) {
             const data = await inst.getSecretData('/topsecret');
-            console.log(data);
             commit('setSecretData', data);
         }
     },

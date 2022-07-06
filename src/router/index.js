@@ -52,6 +52,7 @@ const router = createRouter({
       path: '/topsecret',
       name: 'Top Secret',
       component: SecretView,
+      props: true
     }
   ]
 })
