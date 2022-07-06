@@ -1,4 +1,4 @@
-import axios from 'Axios';
+import axios from 'axios';
 
 // api is getting its URL from vite.config.js proxy settings, originally to avoid CORS bullshit 
 
