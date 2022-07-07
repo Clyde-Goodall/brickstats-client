@@ -6,12 +6,10 @@
 
 ## Uncomment to use this redirect for Single Page Applications
 ## Not needed for static site generators.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+
 
 [[redirects]]
   from = "/api/*"
   to = "https://165.227.220.80/:splat"
+  force = true
   status = 200
