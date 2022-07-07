@@ -19,7 +19,6 @@ import axios from 'axios';
     }
 
     getSecretData() {
-        const sec = this.inst.post('/topsecret', {pass: 'fuckcops'});
-        return sec;
+        return this.inst.post('/topsecret', {pass: 'fuckcops'});
     }
  }
