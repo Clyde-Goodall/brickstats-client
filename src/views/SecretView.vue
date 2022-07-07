@@ -5,7 +5,6 @@
         <Body width="w-screen" scrollable="true">
            <input type="button" @click="getCsv" class="add-button" v-if="ordersAvailable" value="Let's Get This Shit">
         </Body>     
-       
     </div>
 </template>
 
