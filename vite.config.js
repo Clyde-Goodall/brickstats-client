@@ -23,7 +23,7 @@ export default defineConfig(({mode}) => {
     server: {
       proxy: {
         '/api': {
-          target: 'https://api.cucked.soy',
+          target: 'https://api.cucked.soy:3002',
           changeOrigin: true,
           secure: true,
           ws: true,
