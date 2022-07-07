@@ -74,7 +74,4 @@ input[type="text"] {
     @apply bg-gradient-to-br from-pink-600 to-pink-500;
 }
 
-input[type="file"] {
-    display:none;
-}
 </style>

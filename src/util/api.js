@@ -18,7 +18,8 @@ import axios from 'axios';
         return onboard.data
     }
 
-    getSecretData() {
-        return this.inst.post('/topsecret', {pass: 'fuckcops'});
+    getSecretData(data) {
+        console.log(data);
+        return this.inst.post('/topsecret', data);
     }
  }

@@ -49,9 +49,10 @@ export let store = createStore({
             //this just sets the values. Vue has some oddball state stuff but it is convenient so I'm not complaining.
             commit('setApiDetails', keys);
         },
-        async getTopSecret({commit}) {
-            const data = await inst.getSecretData('/topsecret');
-            commit('setSecretData', data);
+        async getTopSecret({commit}, data) {
+            console.log(data);
+            const res = await inst.getSecretData(data);
+            commit('setSecretData', res);
         }
     },
     getters: {

@@ -3,7 +3,11 @@
     <div class="w-full">
         <Top :name="this.$route.name"></Top>
         <Body width="w-screen" scrollable="true">
-           <input type="button" @click="getCsv" class="add-button" v-if="ordersAvailable" value="Let's Get This Shit">
+            <div class="flex flex-col w-full items-center justify-center">
+                <input type="password" v-model="password" placeholder="Password" class="w-1/4" v-if="!ordersAvailable"/>
+                <input type="button" @click="pullData" class="add-button w-1/4" value="Submit" v-if="!ordersAvailable"/>
+                <input type="button" @click="getCsv" class="add-button w-1/4" v-if="ordersAvailable" value="Let's Get This Shit">
+            </div>
         </Body>     
     </div>
 </template>
@@ -18,14 +22,20 @@ export default {
     components: { Top, Body },
     data() {
         return {
+            password: null,
             csvData: null,
         }
     },
     async created() {
-        const data = await this.getTopSecret();
+        
     },
     methods: {
         ...mapActions(['getTopSecret']),
+        async pullData() {
+            if(this.password !== undefined) {
+                const data = await this.getTopSecret({ pass: this.password });
+            }
+        },
         flattenJson(data) {
             const flatten = (obj, prefix = [], current = {}) => {
                 if (typeof(obj) === 'object' && obj !== null) {
@@ -77,7 +87,7 @@ export default {
                 let link = document.createElement('a')
                 link.id = 'download-csv'
                 link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv));
-                link.setAttribute('download', 'yourfiletextgoeshere.csv');
+                link.setAttribute('download', 'orderstats.csv');
                 document.body.appendChild(link)
                 document.querySelector('#download-csv').click()
             }

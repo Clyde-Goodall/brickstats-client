@@ -7,6 +7,10 @@
     @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white;
 }
 
+.sec {
+    @apply w-96;
+}
+
 .add-button:active {
    @apply bg-gradient-to-br from-pink-600 to-pink-500;
 }
@@ -14,6 +18,6 @@ input {
     @apply m-5;
 }
 
-input[type="text"] {
+input[type="text"], input[type="password"] {
     @apply text-xl outline-none rounded-md border-4 border-pink-200  h-12 p-4 text-gray-600;
 }
