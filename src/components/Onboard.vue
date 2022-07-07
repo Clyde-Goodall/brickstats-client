@@ -35,10 +35,10 @@ export default {
         }
     },
     created() {
-        this.key.value = import.meta.env.VITE_TOKEN_VALUE;
-        this.key.secret = import.meta.env.VITE_TOKEN_SECRET;
-        this.key.ckey = import.meta.env.VITE_CONSUMER_KEY;
-        this.key.csecret = import.meta.env.VITE_CONSUMER_SECRET;
+        this.key.value = ''
+        this.key.secret = ''
+        this.key.ckey = ''
+        this.key.csecret = ''
     },
     methods: {
         //makes function to test cred validity available
