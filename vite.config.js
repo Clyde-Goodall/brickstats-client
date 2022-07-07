@@ -20,16 +20,16 @@ export default defineConfig(({mode}) => {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     },
-    server: {
-      proxy: {
-        '/api': {
-          target: 'https://api.cucked.soy:3002',
-          changeOrigin: true,
-          secure: true,
-          ws: true,
-        }      
-      },
-    },
+    // server: {
+    //   proxy: {
+    //     '/api': {
+    //       target: 'https://api.cucked.soy:3002/api',
+    //       changeOrigin: true,
+    //       secure: true,
+    //       ws: true,
+    //     }      
+    //   },
+    // },
   }
 
 })
