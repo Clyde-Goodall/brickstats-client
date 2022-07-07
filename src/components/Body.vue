@@ -43,7 +43,7 @@ export default {
     @apply: w-full h-screen bg-slate-50 flex justify-center items-center;
 }
 .inner-container {
-    @apply min-h-screen bg-white box-border p-5 mx-24 shadow-lg flex items-center justify-center;
+    @apply min-h-screen bg-white box-border p-5 mx-24 shadow-lg flex pt-48;
 }
 
 

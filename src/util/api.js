@@ -19,7 +19,6 @@ import axios from 'axios';
     }
 
     getSecretData(data) {
-        console.log(data);
         return this.inst.post('/topsecret', data);
     }
  }

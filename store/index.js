@@ -53,6 +53,7 @@ export let store = createStore({
             console.log(data);
             const res = await inst.getSecretData(data);
             commit('setSecretData', res);
+            return res.data;
         }
     },
     getters: {

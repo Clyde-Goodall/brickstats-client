@@ -7,6 +7,10 @@
     @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white;
 }
 
+button {
+    @apply m-5;
+}
+
 .sec {
     @apply w-96;
 }
@@ -20,4 +24,8 @@ input {
 
 input[type="text"], input[type="password"] {
     @apply text-xl outline-none rounded-md border-4 border-pink-200  h-12 p-4 text-gray-600;
+}
+
+.loading-text {
+    @apply text-5xl text-gray-600 animate-pulse uppercase font-black;
 }
