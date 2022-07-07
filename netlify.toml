@@ -10,3 +10,9 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://165.227.220.80:3000"
+  force = true
+  status = 200
