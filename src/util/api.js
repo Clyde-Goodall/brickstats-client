@@ -5,7 +5,7 @@ import axios from 'axios';
  export default class Api {
     constructor() {
         this.inst  = axios.create({
-            baseURL : '/api',
+            baseURL : 'https://api.cucked.soy:3002/api',
             headers: {
                 'Access-Control-Allow-Origin': '*',
              }
