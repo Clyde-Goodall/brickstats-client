@@ -11,3 +11,8 @@
   to = "/index.html"
   status = 200
 
+[[redirects]]
+  from = "/api/*"
+  to = "https://api.cucked.soy:3002"
+  force = true
+  status = 200
