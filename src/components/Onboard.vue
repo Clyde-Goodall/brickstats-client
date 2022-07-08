@@ -1,7 +1,7 @@
 <template>
     <div class="w-full flex flex-row p-10">
         <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10 ">
-            <h1 class="heading">"What is this thing?"</h1>
+            <h1 class="heading">What is this?</h1>
             <p>
                BrickStats is a dashboard for checking your Bricklink and similar lego seller platform account metrics with interactive charts in a user-friendly package.
             </p>
