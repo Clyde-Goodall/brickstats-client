@@ -3,6 +3,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* tags */
+h1 {
+    @apply text-5xl;
+}
+
+h2 {
+    @apply text-4xl;
+}
+
+a {
+    @apply text-pink-400 underline font-semibold;
+}
+
+/* classes */
 .add-button {
     @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white;
 }
@@ -16,7 +30,7 @@ button {
 }
 
 .add-button:active {
-   @apply bg-gradient-to-br from-pink-600 to-pink-500;
+   @apply bg-gradient-to-br from-pink-600 to-pink-500 text-gray-100;
 }
 input {
     @apply m-5;

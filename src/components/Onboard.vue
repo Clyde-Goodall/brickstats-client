@@ -1,14 +1,20 @@
 <template>
-    <div class="w-full h-auto flex flex-row p-10">
-        <div class="flex flex-col w-full border-r h-auto p-10 justify-center">
-            <h1 class="heading">Instructions</h1>
+    <div class="w-full flex flex-row p-10">
+        <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10 ">
+            <h1 class="heading">"What is this thing?"</h1>
+            <p>
+               BrickStats is a dashboard for checking your Bricklink and similar lego seller platform account metrics with interactive charts in a user-friendly package.
+            </p>
+            <h2 class="heading">Instructions</h2>
             <p>
                 Please add <b>165.227.220.80</b> to Bricklink's API whitelist.
+                You will also need to get your API credentials to make an account.<br><br>
+                For Bricklink, this can be found <a href="https://www.bricklink.com/v2/login.page?logFolder=h&logSub=&logInTo=https%3A%2F%2Fwww.bricklink.com%2Fv2%2Fapi%2Fregister_consumer.page" target="_">here</a>.<br>
                 This will be used to generate statistics and automatically renew order data for your dashboard.<br>
-                Create an account to automically renew data.
+
             </p>
         </div>
-        <div class="flex flex-col w-full p-10">
+        <div class="flex flex-col w-full px-10 h-auto">
             <input type="text" name="token" placeholder="Token Value" v-model="key.value"/>
             <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret"/>
             <input type="text" name="token" placeholder="Consumer Key" v-model="key.ckey"/>
@@ -35,10 +41,10 @@ export default {
         }
     },
     created() {
-        this.key.value = ''
-        this.key.secret = ''
-        this.key.ckey = ''
-        this.key.csecret = ''
+        this.key.value = import.meta.env.VITE_TOKEN_VALUE ? import.meta.env.VITE_TOKEN_VALUE : ''
+        this.key.secret = import.meta.env.VITE_TOKEN_SECRET ? import.meta.env.VITE_TOKEN_SECRET : ''
+        this.key.ckey = import.meta.env.VITE_CONSUMER_KEY ? import.meta.env.VITE_CONSUMER_KEY  : ''
+        this.key.csecret = import.meta.env.VITE_CONSUMER_SECRET ? import.meta.env.VITE_CONSUMER_SECRET : ''
     },
     methods: {
         //makes function to test cred validity available
@@ -64,7 +70,7 @@ input[type="text"] {
 }
 
 .heading {
-    @apply text-6xl font-sans my-4 text-pink-500 font-bold;
+    @apply font-sans my-4 text-pink-500 font-bold;
 }
 .add-button {
      @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white;

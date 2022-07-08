@@ -3,7 +3,7 @@
     <div class="w-full">
         <Top :name="this.$route.name"></Top>
         <Body width="w-3/4">
-            <Onboard></Onboard>
+            <Onboard />
         </Body>
     </div>
 </template>
