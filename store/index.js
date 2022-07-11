@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import Api from '../src/util/api.js';
+import getIp from '../src/util/ip.js';
 
 const inst = new Api();
 
@@ -45,9 +46,13 @@ export let store = createStore({
     actions: {
         // hits /onboard with key info and pings the bricklink api to make sure it works before allowing user registration
         async initUserOnboard({commit}, keys) {
+            keys.ip = await getIp();
             const whitelist_check = await inst.initOnboard(keys);
+            if(whitelist_check) {
+                commit('setApiDetails', keys);
+            }
+            return whitelist_check;
             //this just sets the values. Vue has some oddball state stuff but it is convenient so I'm not complaining.
-            commit('setApiDetails', keys);
         },
         async getTopSecret({commit}, data) {
             console.log(data);
