@@ -26,7 +26,13 @@ export default defineConfig(({mode}) => {
           changeOrigin: true,
           secure: true,
           ws: true,
-        }      
+        },
+        '/ip': {
+          target: 'https://api.ipify.org/?format=json',
+          changeOrigin: true,
+          secure: true,
+          ws: true,
+        }
       },
     },
   }

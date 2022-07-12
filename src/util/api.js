@@ -12,7 +12,6 @@ import axios from 'axios';
     }
 
     async initOnboard(data) {
-        console.log(import.meta.env.VITE_WHITELIST_IP);
         const cred_check = await this.inst.post('/oauthcheck', data);
         console.log(cred_check)
         return cred_check

@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 export default async function getIp() {
-    const output = await axios.get('https://api.ipify.org/?format=json', {
+    const output = await axios.get('/ip', {
         'Access-Control-Allow-Origin' : '*',
     });
-    print(output);
-    return output.data.ip;
+    return output.data;
 }

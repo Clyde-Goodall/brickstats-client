@@ -16,22 +16,6 @@ a {
     @apply text-pink-400 underline font-semibold;
 }
 
-/* classes */
-.add-button {
-    @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white;
-}
-
-button {
-    @apply m-5;
-}
-
-.sec {
-    @apply w-96;
-}
-
-.add-button:active {
-   @apply bg-gradient-to-br from-pink-600 to-pink-500 text-gray-100;
-}
 input {
     @apply m-5;
 }
@@ -43,6 +27,33 @@ input[type="text"], input[type="password"] {
 input[type="text"]:focus, input[type="password"]:focus {
     @apply text-xl outline-none rounded-md border-4 border-pink-300  h-12 p-4 text-gray-600 shadow-md;
 }
+
+
+/* classes */
+.add-button {
+    @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white transition-all duration-700;
+}
+
+.add-button:active {
+    @apply bg-gradient-to-br from-pink-600 to-pink-500 text-gray-100 shadow-lg;
+ }
+
+ .add-button:disabled {
+    @apply bg-pink-200 animate-pulse;
+ }
+
+button {
+    @apply m-5;
+}
+
+.err-msg {
+    @apply transition-all text-xl m-5 bg-pink-100 border-4 border-pink-500 h-12 p-4 flex items-center justify-center rounded-md text-pink-600 font-bold;
+}
+
+.sec {
+    @apply w-96;
+}
+
 
 .loading-text {
     @apply text-5xl text-gray-600 animate-pulse uppercase font-black;

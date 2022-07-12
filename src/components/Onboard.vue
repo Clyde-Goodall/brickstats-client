@@ -3,24 +3,25 @@
         <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10 ">
             <h1 class="heading">What is this?</h1>
             <p>
-               BrickStats is a dashboard for checking your Bricklink and similar lego seller platform account metrics with interactive charts in a user-friendly package.
+               BrickStats is an API integrator and dashboard for checking your Bricklink account metrics with interactive charts in a user-friendly package. <br> Support for other platforms is <i>coming soon</i>.
             </p>
             <h2 class="heading">Instructions</h2>
             <p>
-                Please add <b>165.227.220.80</b> to Bricklink's API whitelist.
+                Please add <b class="drop-shadow-sm">165.227.220.80</b> to Bricklink's API whitelist.
                 You will also need to get your API credentials to make an account.<br><br>
                 For Bricklink, this can be found <a href="https://www.bricklink.com/v2/login.page?logFolder=h&logSub=&logInTo=https%3A%2F%2Fwww.bricklink.com%2Fv2%2Fapi%2Fregister_consumer.page" target="_">here</a>.<br>
-                This will be used to generate statistics and automatically renew order data for your dashboard.<br>
+                This will be used to generate statistics and automatically renew order data for your dashboard, and <b>nothing else.</b><br>
 
             </p>
         </div>
         <div class="flex flex-col w-full px-10 h-auto">
-            <input type="text" name="token" placeholder="Token Value" v-model="key.value"/>
-            <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret"/>
-            <input type="text" name="token" placeholder="Consumer Key" v-model="key.ckey"/>
-            <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.csecret"/>
+            <span class="err-msg" v-show="error.is">{{ error.msg }}</span>
+            <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
+            <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
+            <input type="text" name="token" placeholder="Consumer Key" v-model="key.ckey" @keyup="fetching = false"/>
+            <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.csecret" @keyup="fetching = false"/>
             <!-- @ binding for event listener. can also be used with keystrokes  -->
-            <input type="button" class="add-button" @click="triggerOnboard" value="Add">
+            <input type="button" class="add-button" @click="triggerOnboard" value="Add" :disabled="fetching">
         </div>
     </div>
 </template>
@@ -33,15 +34,22 @@ export default {
         return {
             // ONLY for 
             key: {
-                value: '',
+                api_name: 'BrickLink',
+                token: '',
                 secret: '',
                 ckey: '',
                 csecret: '',
+            },
+            fetching: false,
+            onb: null,
+            error: {
+                is: false,
+                msg: ''
             }
         }
     },
     created() {
-        this.key.value = import.meta.env.VITE_TOKEN_VALUE ? import.meta.env.VITE_TOKEN_VALUE : ''
+        this.key.token = import.meta.env.VITE_TOKEN_VALUE ? import.meta.env.VITE_TOKEN_VALUE : ''
         this.key.secret = import.meta.env.VITE_TOKEN_SECRET ? import.meta.env.VITE_TOKEN_SECRET : ''
         this.key.ckey = import.meta.env.VITE_CONSUMER_KEY ? import.meta.env.VITE_CONSUMER_KEY  : ''
         this.key.csecret = import.meta.env.VITE_CONSUMER_SECRET ? import.meta.env.VITE_CONSUMER_SECRET : ''
@@ -50,7 +58,20 @@ export default {
         //makes function to test cred validity available
         ...mapActions(['initUserOnboard']),
         async triggerOnboard() {
-            const onb = await this.initUserOnboard(this.key);
+            this.onb = null;
+            this.fetching = true;
+            this.onb = await this.initUserOnboard(this.key);
+            if(this.onb.data == 'bad_connect') {
+                    this.error.is = true;
+                    this.error.msg = 'Unable to verify credentials.';
+            }
+            else if(this.onb.data == false) {
+                // this.$router.push('/register');
+            } 
+            else {
+                this.fetching = false;
+                this.onb = null;
+            }
         }
     },
 }

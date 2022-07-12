@@ -28,13 +28,15 @@ export let store = createStore({
     mutations: {
         //will set all api key/token info for onboarding process. 
         //by the time user has been created, their api creds will already be stored in db;
-        setApiDetails(state, data) {
+        setLocalEntry(state, data) {
+            console.log(keys)
             if(state.keys.token !== undefined && state.keys.secret !== undefined) {
                 state.keys.token = data.token;
                 state.keys.secret = data.secret;
                 state.keys.ckey = data.ckey;
-                state.csecret = data.csecret;
+                state.keys.csecret = data.csecret;
             }
+            console.log(state.keys);
         },
         //temporary api pulling for 
         setSecretData(state, data) {
@@ -44,15 +46,19 @@ export let store = createStore({
         }
     },
     actions: {
-        // hits /onboard with key info and pings the bricklink api to make sure it works before allowing user registration
+        // hits /onboard with key info and pings the bricklink api to make sure it works/ks not duplicate before allowing user registration
         async initUserOnboard({commit}, keys) {
             keys.ip = await getIp();
-            const whitelist_check = await inst.initOnboard(keys);
-            if(whitelist_check) {
-                commit('setApiDetails', keys);
+            console.log(keys);
+            const cred_check = await inst.initOnboard(keys);
+            // console.log(cred_check);
+            // commits it to state so it holds the info during registration. 
+            // Will be used to permit access to /register only if keys have value
+            // Should still be corroborrated with the ApiEntry in the DB to make sure no one is abusing
+            if(cred_check == true) {
+                commit('setLocalEntry', keys);
             }
-            return whitelist_check;
-            //this just sets the values. Vue has some oddball state stuff but it is convenient so I'm not complaining.
+            return cred_check;
         },
         async getTopSecret({commit}, data) {
             console.log(data);
@@ -77,8 +83,5 @@ export let store = createStore({
             }
             return check;
         },
-        // unfucks the dumbass proxy object that vue is 
-        // so inclined to turn everything via mutations into???????
-
     }
 });

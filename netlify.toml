@@ -16,3 +16,9 @@
   to = "https://api.cucked.soy:3002"
   force = true
   status = 200
+
+  [[redirects]]
+  from = "/ip"
+  to = "https://api.ipify.org/?format=json"
+  force = true
+  status = 200
