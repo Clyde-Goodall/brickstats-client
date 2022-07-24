@@ -19,24 +19,32 @@ export let store = createStore({
             secret: null,
             ckey: null,
             csecret: null,
+            api_name:  null,
         },
         secret: {
             orders: null,
             inventory: null,
         },
+        user: {
+            token: null,
+            user: null,
+            authenticated: false,
+        },
+        api_list: []
     },
     mutations: {
         //will set all api key/token info for onboarding process. 
         //by the time user has been created, their api creds will already be stored in db;
         setLocalEntry(state, data) {
-            console.log(keys)
-            if(state.keys.token !== undefined && state.keys.secret !== undefined) {
-                state.keys.token = data.token;
-                state.keys.secret = data.secret;
-                state.keys.ckey = data.ckey;
-                state.keys.csecret = data.csecret;
-            }
-            console.log(state.keys);
+            state.keys.token = data.token;
+            state.keys.secret = data.secret;
+            state.keys.ckey = data.ckey;
+            state.keys.csecret = data.csecret;
+            state.api_name = data.api_name
+            console.log(data);
+        },
+        setApiList(state, data){
+            state.api_list = data
         },
         //temporary api pulling for 
         setSecretData(state, data) {
@@ -48,23 +56,71 @@ export let store = createStore({
     actions: {
         // hits /onboard with key info and pings the bricklink api to make sure it works/ks not duplicate before allowing user registration
         async initUserOnboard({commit}, keys) {
+            // uses ip to tie creds to an individual pc
             keys.ip = await getIp();
-            console.log(keys);
+            // console.log(keys);
             const cred_check = await inst.initOnboard(keys);
-            // console.log(cred_check);
             // commits it to state so it holds the info during registration. 
             // Will be used to permit access to /register only if keys have value
             // Should still be corroborrated with the ApiEntry in the DB to make sure no one is abusing
-            if(cred_check == true) {
+            console.log(cred_check);
+            if(cred_check.data == false || cred_check.data == 'user_none') {
                 commit('setLocalEntry', keys);
             }
             return cred_check;
         },
+        async attemptRegister(_, data) {
+            // use ip to get api cred entry tied to the computer and update it server-side w/ user info
+            data.ip = await getIp();
+            const reg = await inst.registerUser(data);
+            // console.log(reg);
+            if(reg.data.token && reg.data.username){
+                $cookies.set('token', reg.data.token);
+                $cookies.set('username', reg.data.username);
+            }
+            return reg;
+        },
+
+        async attemptLogin(_, data) {
+            data.ip = await getIp();
+            const login = await inst.loginUser(data);
+            // console.log(login.data.token);
+            if(login.data.token && login.data.username) {
+                console.log('passed');
+                $cookies.set('token', login.data.token);
+                $cookies.set('username', login.data.username);
+                return login;
+            }
+            return 'Could not login';
+        },
+
+        async checkAuth(_, data) {
+            const auth = await inst.getAuth(data);
+            // console.log('auth: ' + auth);
+            return auth;
+        },
+
         async getTopSecret({commit}, data) {
-            console.log(data);
+            // console.log(data);
             const res = await inst.getSecretData(data);
             commit('setSecretData', res);
             return res.data;
+        },
+
+        // 
+        //  API CRUD
+        // 
+
+        // fetches current list of apis associated wuth account
+        async getApiList({commit}) {
+            const res = await inst.getUserApiList({'token': $cookies.get('token')});
+            // console.log(res.data)
+            commit('setApiList', res.data);
+            return res.data
+        },
+
+        async updateSingleApi({commit}, data) {
+            console.log(data);
         }
     },
     getters: {

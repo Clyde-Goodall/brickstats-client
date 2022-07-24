@@ -4,6 +4,16 @@
 @tailwind utilities;
 
 /* tags */
+
+/* global html attributes */
+html::selection {
+    background: rgba(252 231 243, .5);
+}
+
+p {
+    @apply text-xl text-gray-600;
+}
+
 h1 {
     @apply text-5xl;
 }
@@ -20,11 +30,11 @@ input {
     @apply m-5;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="username"], input[type="password"], input[type="email"] {
     @apply text-xl outline-none rounded-md border-4 border-pink-200  h-12 p-4 text-gray-600 transition-all duration-300;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input[type="text"]:focus, input[type="username"]:focus, input[type="password"]:focus, input[type="email"]:focus {
     @apply text-xl outline-none rounded-md border-4 border-pink-300  h-12 p-4 text-gray-600 shadow-md;
 }
 
@@ -42,6 +52,13 @@ input[type="text"]:focus, input[type="password"]:focus {
     @apply bg-pink-200 animate-pulse;
  }
 
+.non-submit-button {
+    @apply outline-none border rounded-md bg-white font-extrabold box-border shadow-md select-none h-12 text-xl text-gray-600;
+}
+.non-submit-button:active {
+    @apply bg-gradient-to-br from-gray-200 to-gray-100 text-gray-700 border-gray-300;
+}
+
 button {
     @apply m-5;
 }
@@ -54,7 +71,11 @@ button {
     @apply w-96;
 }
 
-
+/* text */
 .loading-text {
     @apply text-5xl text-gray-600 animate-pulse uppercase font-black;
+}
+
+.heading {
+    @apply font-sans my-4 text-pink-500 font-bold;
 }

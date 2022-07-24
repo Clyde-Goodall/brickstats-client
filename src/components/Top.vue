@@ -14,6 +14,6 @@ export default {
 
 <style scoped>
 .top {
-    @apply w-full h-24 bg-black flex items-center pl-8 select-none shadow-xl z-50;
+    @apply w-full h-24 bg-black flex items-center pl-8 select-none shadow-lg z-50;
 }
 </style>

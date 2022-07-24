@@ -2,7 +2,7 @@
     <div class="w-full">
         <Top :name="this.$route.name"></Top>
         <Body width="w-3/4">
-            <Register />
+            <Login />
         </Body>
     </div>
 </template>
@@ -12,9 +12,9 @@ import { mapActions, mapState, mapGetters } from "vuex";
 
 import Top from '../components/Top.vue';
 import Body from '../components/Body.vue';
-import Register from '../components/Register.vue';
+import Login from '../components/Login.vue';
 
 export default {
-    components: {Register, Top, Body},
+    components: {Login, Top, Body},
 }
 </script>

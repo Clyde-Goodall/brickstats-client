@@ -1,10 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import AvailableMidleware from '../middleware/available';
+import Api from '../util/api';
+const inst = new Api();
+
+// views
 import HomeView from '../views/HomeView.vue';
 import DashboardView from '../views/DashboardView.vue';
 import ChartView from '../views/subviews/ChartView.vue';
 import DetailView from '../views/subviews/DetailView.vue';
+import RegisterView from '../views/RegisterView.vue';
+import LoginView from '../views/LoginView.vue';
 import SecretView from '../views/SecretView.vue';
+import PreferenceView from '../views/subviews/PreferencesView.vue'
+import SavedApiView from '../views/subviews/SavedApiView.vue';
 
 // Most of this is self explanatory
 // Import route component -> make route entry -> point it to the component. You SHOULD be able to add middlewares in here too but fuck me I guess
@@ -17,34 +24,48 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       component: HomeView,
-      meta: {
-        middleware: [AvailableMidleware]
-      }
+
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: RegisterView,
+
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: LoginView,
+
     },
     {
       path: '/dashboard',
       name: 'Dashboard',
       component: DashboardView,
-      meta: {
-        middleware: [AvailableMidleware]
-      },
+
       props: true,
       children: [
+        {
+          path: 'apis',
+          name: 'Saved Apis',
+          component: SavedApiView
+        },
         {
           path: 'charts',
           name: 'Charts',
           component: ChartView,
-          emta: {
-            transition: 'slide-right'
-          }
+
         },
         {
           path: 'details',
           name: 'Details',
           component: DetailView,
-          meta: {
-            transition: 'slide-left',
-          }
+
+        },
+        {
+          path: 'preferences',
+          name: 'Preferences',
+          component: PreferenceView,
         }
       ]
     },
@@ -52,9 +73,33 @@ const router = createRouter({
       path: '/topsecret',
       name: 'Top Secret',
       component: SecretView,
-      props: true
+      props: true,
     }
   ]
 })
+
+//This should really be in a separate file beause it might get long in the tooth
+
+router.beforeEach(async (to, from, next) => {
+  console.log(`to: ${to.path}, from: ${from.path}`)
+  // requires auth
+  const auth = await inst.getAuth({'token': $cookies.get('token'), 'username': $cookies.get('username')});
+  // no auth and attempting to access protected routes
+  if(!auth && !['/ip', '/register', '/', '/login'].includes(to.path)) {
+    return next({path: '/login'});
+  } else {
+  // should fix this elsewhere - /dashboard is simply a base view, must have /charts or details etc... should hopefully be edge case
+  if(to.path == '/dashboard/' || to.path == '/dashboard') {
+    console.log('To grandmother\'s dashboard we go');
+    return next({path: '/dashboard/charts'});
+  }
+
+  if(['/ip', '/register', '/', '/login'].includes(to.path) && auth) {
+    return next({path: '/dashboard/charts'});
+  }
+  // user is not authenicated and is trying to acces  s protected route
+  return next();
+  }
+});
 
 export default router

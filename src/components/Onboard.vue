@@ -15,13 +15,12 @@
             </p>
         </div>
         <div class="flex flex-col w-full px-10 h-auto">
-            <span class="err-msg" v-show="error.is">{{ error.msg }}</span>
+            <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
             <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
             <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
             <input type="text" name="token" placeholder="Consumer Key" v-model="key.ckey" @keyup="fetching = false"/>
             <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.csecret" @keyup="fetching = false"/>
-            <!-- @ binding for event listener. can also be used with keystrokes  -->
-            <input type="button" class="add-button" @click="triggerOnboard" value="Add" :disabled="fetching">
+            <input type="button" class="add-button" @click="triggerOnboard" value="Add" :disabled="fetching && !error.is">
         </div>
     </div>
 </template>
@@ -61,16 +60,22 @@ export default {
             this.onb = null;
             this.fetching = true;
             this.onb = await this.initUserOnboard(this.key);
+            // console.log(this.onb.data);
             if(this.onb.data == 'bad_connect') {
-                    this.error.is = true;
-                    this.error.msg = 'Unable to verify credentials.';
-            }
-            else if(this.onb.data == false) {
-                // this.$router.push('/register');
-            } 
-            else {
+                // Could not connect
+                this.error.is = true;
+                this.error.msg = 'Unable to verify credentials.';
                 this.fetching = false;
-                this.onb = null;
+            } else if(this.onb.data == false || this.onb.data == 'user_none') {
+                // works and creds unclaimed
+                // console.log('going to register');
+                this.$router.push('/register');
+            } else if(this.onb.data == true) {
+                // works and is claimed
+                this.$router.push('/login');
+            } else {
+                this.fetching = false;
+                this.onb = null; 
             }
         }
     },

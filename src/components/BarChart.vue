@@ -1,6 +1,6 @@
 <template>
 <!-- Reusable Bar Chart implementation. -->
-    <div class="w-auto max-h-1/3 h-auto shadow-md rounded-lg px-12 py-3 box-border">
+    <div class="w-auto max-h-1/3 h-auto shadow-md rounded-lg px-12 py-3 m-2 box-border">
         <Bar 
             :chartOptions="chartOptions"
             :chartData="chartData"
@@ -21,14 +21,7 @@ export default {
     components: { Bar },
     name: 'BarChart',
     props: ['cdata', 'options', 'title', 'x-axis', 'y-axis'],
-
-    // mounted() {
-    //     if(this.isDataAvailable) {
-    //         this.renderChart(this.data, this.options);
-    //     }
-    // },   
     computed: {
-        ...mapGetters(['isDataAvaialble']),
     },
   
   mounted() {

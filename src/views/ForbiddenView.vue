@@ -18,6 +18,7 @@ import Onboard from '../components/Onboard.vue';
 export default {
     components: { Top, Body, Onboard },
     created() {
+        console.log($cookies.get('token'));
     },
     computed: {
         //refer to mapped function with this.thing i.e. this.isDataAvailable

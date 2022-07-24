@@ -1,6 +1,29 @@
 <template>
-    <div class="flex flex-row h-auto flex-wrap p-10">
+    <div class="flex flex-row h-auto flex-wrap p-10 justify-center ">
         <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+        
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
+        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+
     </div>
 </template>
 
@@ -33,13 +56,10 @@ export default {
         }
     },
     mounted() {
-        if(!this.isDataAvailable) {
-            this.$router.push('/');
-        }
+      
     },
     computed: {
         ...mapState(['transforms_data']),
-        ...mapGetters(['isDataAvailable']),
         cdata() {
             return JSON.parse(JSON.stringify(this.transforms_data.monthly));
         }

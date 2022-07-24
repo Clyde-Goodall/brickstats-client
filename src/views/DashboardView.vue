@@ -1,16 +1,17 @@
 <template>
 <!-- Must be user to view this -->
-    <div class="w-full h-screen">
+    <div class="w-full h-full">
          <Top :name="this.$route.name"></Top>
         <div class="flex flex-row h-full">
-            <div class="min-w-fit h-screen flex-grow-0">
+            <div class="min-w-fit h-full flex-grow-0">
                 <SideBar></SideBar>
             </div>
             <!-- the meat and potaters (charts/stats) -->
-            <div class="h-full w-full overflow-y-auto" v-if="isDataAvailable">
+            <div class="h-full w-full overflow-y-auto shadow-3xl z-10">
             <!-- Sidebar will route between views here  -->
                 <router-view :key="$route.fullPath">
                 </router-view>
+                <div class="top-bar-offset"></div>
             </div>
         </div>        
    </div>
@@ -47,3 +48,9 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.top-bar-offset {
+    @apply h-24 w-full;
+}
+</style>
