@@ -52,6 +52,14 @@ input[type="text"]:focus, input[type="username"]:focus, input[type="password"]:f
     @apply bg-pink-200 animate-pulse;
  }
 
+ .top-button {
+    @apply outline-none rounded-md bg-none font-extrabold box-border border-2 shadow-md select-none h-12 text-xl text-white transition-all duration-700;
+ }
+
+ .top-button:active {
+    @apply bg-gradient-to-br from-gray-800 to-gray-900 text-gray-100 shadow-lg;
+ }
+
 .non-submit-button {
     @apply outline-none border rounded-md bg-white font-extrabold box-border shadow-md select-none h-12 text-xl text-gray-600;
 }
