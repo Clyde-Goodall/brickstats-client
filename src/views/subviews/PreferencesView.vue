@@ -1,7 +1,7 @@
 <template>
      <!-- quick stat overview -->
     <div class="w-full box-border p-10 flex flex-row flex-wrap ">
-        <!-- grand total -->
+        <!-- Preferences -->
         <div class="rounded-lg shadow-md min-w-48 w-1/3 max-w-1/2 box-border p-5">
             <span class="card-detail-text">User Preferences go here</span>
         </div>

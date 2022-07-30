@@ -1,6 +1,6 @@
 <template>
 <!-- this is a container -->
-    <div class="w-full h-fit flex justify-center bg-slate-50">
+    <div class="w-full h-fit flex justify-center bg-pink-400">
         <div :class="{'inner-container': true, [cWidth]: true, [cScroll]: true}">
             <!-- Put anything you want rendered inside the Body tag wherever you include it in. See: "../views/HomeView.vue" -->
             <slot>

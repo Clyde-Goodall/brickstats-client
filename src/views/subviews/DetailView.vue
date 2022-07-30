@@ -2,7 +2,7 @@
      <!-- quick stat overview -->
     <div class="w-full box-border p-10 flex flex-row flex-wrap ">
         <!-- grand total -->
-        <div class="rounded-lg shadow-md min-w-48 w-1/3 max-w-1/2 box-border p-5">
+        <div class="dash-card-default">
             <span class="card-detail-text">Grand Total</span>
         </div>
     </div>  

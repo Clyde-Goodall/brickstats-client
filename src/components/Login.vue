@@ -55,7 +55,7 @@
                             this.$router.push({path: '/dashboard/charts'});
                         }
                     } 
-                    if(log.data.error !== false) {
+                    if(log.data.error != false) {
                         this.fetching = false;
                         this.error.is = true;
                         this.error.msg = log.data.error;

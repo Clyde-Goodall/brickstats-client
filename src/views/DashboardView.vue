@@ -7,7 +7,7 @@
                 <SideBar></SideBar>
             </div>
             <!-- the meat and potaters (charts/stats) -->
-            <div class="h-full w-full overflow-y-auto shadow-3xl z-10">
+            <div class="h-full w-full overflow-y-auto shadow-3xl z-10 bg-pink-400">
             <!-- Sidebar will route between views here  -->
                 <router-view :key="$route.fullPath">
                 </router-view>

@@ -1,4 +1,5 @@
 import axios from '../middleware/interceptors.js';
+import getIp from './ip.js';
 
  export default class Api {
     //need cookies for auth headers, jwt token stuff
@@ -11,10 +12,24 @@ import axios from '../middleware/interceptors.js';
             }
         });
     }
+    
+    // gets all API entries in user dicument
+    async getApiSources() {
+        const res = this.inst.get('/api-sources');
+        return res
+    }
+
+    // util for api CRUD, but could be useful elsewhere.
+    async liveCheck(data) {
+        const res = this.inst.post('/api-check', data);
+        return res;
+    }
 
     // Triggers after user submits api entry on home page. 
     // This can probably be eventually strreamlined into a general ApiEntry addition and handle the onboarding individually
     async initOnboard(data) {
+        const ip = await getIp();
+        data['last_ip'] = ip;
         const cred_check = this.inst.post('/oauthcheck', data);
         return cred_check
     }
@@ -44,13 +59,23 @@ import axios from '../middleware/interceptors.js';
         return tobool
     }
 
+    // 
+    // API Entry CRUD
+    // 
     async getUserApiList(data) {
+        console.log(this.inst.defaults.headers);
         const list = await this.inst.post('/api-list', data);
         return list.data;
     }
 
+    async updateApiEntry(data) {
+        console.log(data);
+        const entry = await this.inst.post('/update-source', data)
+        return entry.data
+    }
+
     // for the homies
-    getSecretData(data) {
+    async getSecretData(data) {
         return this.inst.post('/topsecret', data);
     }
  }

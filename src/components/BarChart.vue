@@ -1,6 +1,6 @@
 <template>
 <!-- Reusable Bar Chart implementation. -->
-    <div class="w-auto max-h-1/3 h-auto shadow-md rounded-lg px-12 py-3 m-2 box-border">
+    <div class="chart-card">
         <Bar 
             :chartOptions="chartOptions"
             :chartData="chartData"

@@ -30,12 +30,20 @@ input {
     @apply m-5;
 }
 
-input[type="text"], input[type="username"], input[type="password"], input[type="email"] {
+input[type="text"], input[type="username"], input[type="password"], input[type="email"], select {
     @apply text-xl outline-none rounded-md border-4 border-pink-200  h-12 p-4 text-gray-600 transition-all duration-300;
 }
 
 input[type="text"]:focus, input[type="username"]:focus, input[type="password"]:focus, input[type="email"]:focus {
     @apply text-xl outline-none rounded-md border-4 border-pink-300  h-12 p-4 text-gray-600 shadow-md;
+}
+
+select {
+    @apply bg-white m-4 p-0 pl-4;
+}
+
+option {
+    @apply rounded-md;
 }
 
 
@@ -44,9 +52,18 @@ input[type="text"]:focus, input[type="username"]:focus, input[type="password"]:f
     @apply outline-none rounded-md bg-pink-400 font-extrabold box-border shadow-md select-none h-12 text-xl text-white transition-all duration-700;
 }
 
+.delete-button {
+    @apply outline-none rounded-md bg-pink-600 font-extrabold box-border shadow-md select-none h-12 text-xl text-white transition-all duration-700;
+}
+
 .add-button:active {
     @apply bg-gradient-to-br from-pink-600 to-pink-500 text-gray-100 shadow-lg;
  }
+
+ .delete-button:active {
+    @apply bg-gradient-to-br from-pink-700 to-pink-800 text-gray-100 shadow-lg;
+ }
+
 
  .add-button:disabled {
     @apply bg-pink-200 animate-pulse;
@@ -86,4 +103,17 @@ button {
 
 .heading {
     @apply font-sans my-4 text-pink-500 font-bold;
+}
+
+/* cards */
+.dash-card-default {
+    @apply rounded-lg shadow-md w-1/3 box-border p-5 bg-white;
+}
+
+.api-crud-card {
+    @apply rounded-lg shadow-md w-full max-w-full box-border p-16 bg-white;
+}
+
+.chart-card {
+    @apply w-auto h-auto shadow-md rounded-lg px-16 py-3 m-2 box-border bg-white;
 }

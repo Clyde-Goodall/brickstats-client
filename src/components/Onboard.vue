@@ -15,12 +15,22 @@
             </p>
         </div>
         <div class="flex flex-col w-full px-10 h-auto">
-            <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
-            <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
-            <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
-            <input type="text" name="token" placeholder="Consumer Key" v-model="key.ckey" @keyup="fetching = false"/>
-            <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.csecret" @keyup="fetching = false"/>
+            <select name="API Selector" v-model="selected">
+                <option v-for="o in getApiSources" :key="o.id" :value="o.name">{{o.name}}</option>
+            </select>
+            <div v-if="selected=='BrickLink'" class="w-full p-0 m-0">
+                <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
+                <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
+                <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
+                <input type="text" name="token" placeholder="Consumer Key" v-model="key.consumer_token" @keyup="fetching = false"/>
+                <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.consumer_secret" @keyup="fetching = false"/>
+            </div>
+            <div v-if="selected=='BrickOwl'" class="w-full p-0 m-0">
+                <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
+                <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
+            </div>
             <input type="button" class="add-button" @click="triggerOnboard" value="Add" :disabled="fetching && !error.is">
+
         </div>
     </div>
 </template>
@@ -34,37 +44,67 @@ export default {
             // ONLY for 
             key: {
                 api_name: 'BrickLink',
+                type: 0,
                 token: '',
                 secret: '',
-                ckey: '',
-                csecret: '',
+                consumer_token: '',
+                consumer_secret: '',
             },
             fetching: false,
             onb: null,
             error: {
                 is: false,
                 msg: ''
-            }
+            },
+            options: [],
+            selected: 'BrickLink'
         }
     },
-    created() {
+
+    async created() {
+        await this.getSources();
+        for( let i = 0; i < this.api_sources.length; i++) {
+            this.options.push({
+                'id': i,
+                'key': this.api_sources[i].name,
+                'name': this.api_sources[i].name,
+                'base_url': this.api_sources[i].base_url,
+                'fields': this.api_sources[i].fields,
+                'type': this.api_sources[i].api_type
+            });
+        }
+
         this.key.token = import.meta.env.VITE_TOKEN_VALUE ? import.meta.env.VITE_TOKEN_VALUE : ''
         this.key.secret = import.meta.env.VITE_TOKEN_SECRET ? import.meta.env.VITE_TOKEN_SECRET : ''
-        this.key.ckey = import.meta.env.VITE_CONSUMER_KEY ? import.meta.env.VITE_CONSUMER_KEY  : ''
-        this.key.csecret = import.meta.env.VITE_CONSUMER_SECRET ? import.meta.env.VITE_CONSUMER_SECRET : ''
+        this.key.consumer_token = import.meta.env.VITE_CONSUMER_KEY ? import.meta.env.VITE_CONSUMER_KEY  : ''
+        this.key.consumer_secret = import.meta.env.VITE_CONSUMER_SECRET ? import.meta.env.VITE_CONSUMER_SECRET : ''
     },
     methods: {
         //makes function to test cred validity available
-        ...mapActions(['initUserOnboard']),
+        ...mapActions(['initUserOnboard', 'getSources']),
         async triggerOnboard() {
             this.onb = null;
             this.fetching = true;
+            const opts = this.options.filter(o => o.name == this.selected.name)
+            const payload = {
+                type: opts.type,
+                name: opts.name,
+                token: this.key.token,
+                secret: this.key.secret,
+                ckey: this.key.consumer_token,
+                csecret: this.key.consumer_secret,
+            }
             this.onb = await this.initUserOnboard(this.key);
             // console.log(this.onb.data);
             if(this.onb.data == 'bad_connect') {
                 // Could not connect
                 this.error.is = true;
                 this.error.msg = 'Unable to verify credentials.';
+                this.fetching = false;
+                // This should only happen if someone is fucking w/ the code
+            } else if(this.onb.data == 'invalid_type') {
+                this.error.is = true;
+                this.error.msg = 'Invalid API type >:(';
                 this.fetching = false;
             } else if(this.onb.data == false || this.onb.data == 'user_none') {
                 // works and creds unclaimed
@@ -79,6 +119,12 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapState(['api_sources']),
+        getApiSources() {
+        return this.api_sources;
+        },
+    }
 }
 </script>
 

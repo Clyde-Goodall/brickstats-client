@@ -30,7 +30,8 @@ export let store = createStore({
             user: null,
             authenticated: false,
         },
-        api_list: []
+        api_list: [],
+        api_sources: []
     },
     mutations: {
         //will set all api key/token info for onboarding process. 
@@ -38,22 +39,37 @@ export let store = createStore({
         setLocalEntry(state, data) {
             state.keys.token = data.token;
             state.keys.secret = data.secret;
-            state.keys.ckey = data.ckey;
-            state.keys.csecret = data.csecret;
+            state.keys.ckey = data.consumer_token;
+            state.keys.csecret = data.consumer_secret;
             state.api_name = data.api_name
             console.log(data);
         },
         setApiList(state, data){
             state.api_list = data
         },
+        setUpdatedApi(state, data) {
+            return
+        },
         //temporary api pulling for 
         setSecretData(state, data) {
             if(data) {
                 state.secret.orders = data.data.data;
             }
+        },
+        setSources(state, data) {
+            if(data) {
+                state.api_sources = data;
+            }
         }
+
     },
     actions: {
+
+        // 
+        //  USER REGISTRATION/LOGIN/AUTHENTICATION
+        //  This should be complete for now barring any bugs
+        // 
+
         // hits /onboard with key info and pings the bricklink api to make sure it works/ks not duplicate before allowing user registration
         async initUserOnboard({commit}, keys) {
             // uses ip to tie creds to an individual pc
@@ -100,11 +116,26 @@ export let store = createStore({
             return auth;
         },
 
+        // 
+        //  UNSORTED UTILS
+        // 
+
         async getTopSecret({commit}, data) {
             // console.log(data);
             const res = await inst.getSecretData(data);
             commit('setSecretData', res);
             return res.data;
+        },
+
+        async getSources({commit}) {
+            const res = await inst.getApiSources();
+            commit('setSources', res.data);
+            return res.data
+        },
+
+        async lieApiCheck(_, data) {
+            const res = await inst.liveCheck(data)
+            return res.data
         },
 
         // 
@@ -118,14 +149,23 @@ export let store = createStore({
             commit('setApiList', res.data);
             return res.data
         },
-
+        // updates api cred definitions, mainly through SavedApiView
         async updateSingleApi({commit}, data) {
+            const res = await inst.updateApiEntry(data);
+            if(res.data.error) {
+                return res.data;
+            }
+            commit('setUpdatedEntry', data);
+        },
+
+        async submitNew({commit}, data)  {
             console.log(data);
         }
     },
     getters: {
         //this is what was initially supposed to be a middleware. 
         //tests to see if any data from csv(defunct) is available and will do something if there isn't.
+        // currently unused
         isDataAvailable(state) {
             let d = JSON.parse(JSON.stringify(state.transforms_data));
             let check = true;

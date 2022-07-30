@@ -67,6 +67,8 @@
                     if(auth) {
                         this.$router.push({path: '/dashboard'});
                     }
+                    // Spits out error above inputs if something is wrong. 
+                    // Should be fixed server side and here
                     else if(reg.data.error !== false) {
                         this.fetching = false;
                         this.error.is = true;
