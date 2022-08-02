@@ -8,6 +8,7 @@
             <h2 class="heading">Instructions</h2>
             <p>
                 Please add <b class="drop-shadow-sm">165.227.220.80</b> to Bricklink's API whitelist.
+                This is in <b>heavy beta</b>, so don't expect everything tow work super well. 
                 You will also need to get your API credentials to make an account.<br><br>
                 For Bricklink, this can be found <a href="https://www.bricklink.com/v2/login.page?logFolder=h&logSub=&logInTo=https%3A%2F%2Fwww.bricklink.com%2Fv2%2Fapi%2Fregister_consumer.page" target="_">here</a>.<br>
                 This will be used to generate statistics and automatically renew order data for your dashboard, and <b>nothing else.</b><br>
@@ -91,8 +92,8 @@ export default {
                 name: opts.name,
                 token: this.key.token,
                 secret: this.key.secret,
-                ckey: this.key.consumer_token,
-                csecret: this.key.consumer_secret,
+                consumer_token: this.key.consumer_token,
+                consumer_secret: this.key.consumer_secret,
             }
             this.onb = await this.initUserOnboard(this.key);
             // console.log(this.onb.data);

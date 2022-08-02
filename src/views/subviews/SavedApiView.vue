@@ -1,42 +1,48 @@
 <template>
     <!-- quick stat overview -->
      <!-- operations -->
-    <div class="w-full bg-pink-600 fixed block px-5">
+    <div class="w-full bg-pink-600 fixed block px-5 z-10">
         <!-- supported API selector
          -->
         <select name="API Selector" v-model="selected" class="w-1/4">
                 <option v-for="o in getApiSources" :key="o.id" :value="o.name">{{o.name}}</option>
             </select>
-        <input type="button" class="non-submit-button px-6" value="Add Entry"/>
+        <input type="button" class="non-submit-button px-6" value="Add Entry" @click="addEntry"/>
     </div>
     <div class="w-full h-24"></div>
 
     <div class="w-full box-border p-10 flex flex-row flex-wrap ">
 
         <!-- User API CRUD -->
-        <div class="api-crud-card" v-for="entry in api_list" :key="entry._id['$oid']">
-            <form class="card-detail-text" :name="entry._id['$oid']" method="#">
+        <div class="api-crud-card mb-10" v-for="entry in api_list" :key="entry.api_name">
+            <form class="card-detail-text" :name="entry.api_name" method="#">
                 <h1 class="heading ml-5">{{entry.api_name}}</h1>
                 <div class="flex flex-col">
+                    <span class="err-msg" v-if="api_errors[entry.api_name]">{{ api_errors[entry.api_name] }}</span>
+
                     <div v-if="entry['api_name'] == 'BrickLink'" class="w-full p-0 m-0 flex flex-col">
-                        <label class="cred-label" :for="entry.api_name + '-token'">Token</label>
+                        <label class="cred-label">Title</label>
+                        <input type="text" name="token" placeholder="Entry Title" v-model="entry['title']" @keyup="fetching = false"/>
+                        <label class="cred-label">Token</label>
                         <input type="text" name="token" placeholder="Token Value" v-model="entry['token']" @keyup="fetching = false"/>
-                        <label class="cred-label" :for="entry.api_name + '-secret'">Secret</label>
+                        <label class="cred-label">Secret</label>
                         <input type="text" name="secret" placeholder="Token Secret" v-model="entry['secret']" @keyup="fetching = false"/>
-                        <label class="cred-label" :for="entry.api_name + '-cosumer-token'">Consumer Token</label>
+                        <label class="cred-label">Consumer Token</label>
                         <input type="text" name="token" placeholder="Consumer Key" v-model="entry['consumer_token']" @keyup="fetching = false"/>
-                        <label class="cred-label" :for="entry.api_name + '-consumer-secret'">Consumer Secret</label>
+                        <label class="cred-label">Consumer Secret</label>
                         <input type="text" name="secret" placeholder="Consumer Secret" v-model="entry['consumer_secret']" @keyup="fetching = false"/>
                     </div>
-                    <div v-if="entry['api_name'] == 'BrickOwl'" class="w-full p-0 m-0 flex-flex-col">
-                        <label class="cred-label" :for="entry.api_name + '-token'">Token</label>
-                        <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
+                    <div v-if="entry['api_name'] == 'BrickOwl'" class="w-full p-0 m-0 flex flex-col">
+                        <label class="cred-label">Title</label>
+                        <input type="text" name="token" placeholder="Entry Title" v-model="entry['title']" @keyup="fetching = false"/>
+                        <label class="cred-label">Token</label>
+                        <input type="text" name="token" placeholder="Token Value" v-model="entry['token']" @keyup="fetching = false"/>
                     </div>
                 </div>
                 <!-- crud  -->
                 <div class="w-full flex justify-between">
-                    <input type="button" class="add-button px-4" @click="submitChanges(entry._id['$oid'])" value="Save" />
-                    <input type="button" class="delete-button px-4" @click="deleteEntry(entry._id['$oid'])" value="Delete" />    
+                    <input type="button" class="add-button px-4" @click="submitChanges(entry)" value="Save" />
+                    <input type="button" class="delete-button px-4" @click="deleteEntry(entry)" value="Delete" />    
                 </div>
             </form>
             </div>
@@ -52,38 +58,65 @@ export default {
         return {
             entries: {},
             selected: null,
-            error: {
-                is: false,
-                msg: ''
-            },
         }
     },
     methods: {
-        ...mapActions(['getApiList', 'getSources', 'submitNew', 'updateSingleApi', 'liveApiCheck']),
+        ...mapActions(['getApiList', 'getSources', 'addProvisionalEntry', 'updateSingleApi', 'addSingleApi', 'liveApiCheck']),
         addEntry() {
             if(this.selected) {
-                this.submitNew({'selection': this.selected})
+                this.addProvisionalEntry({
+                    api_name: this.selected,
+                    new: true,
+                })
             }
         },
-        async submitChanges(id) {
-            await this.entries.forEach(e => {
-                if(e._id['$oid'] == id) {
+        async submitChanges(entry) {
+            // console.log(entry)
+            console.log(this.api_sources)
+            // new entry submission
+            if(entry.new == true) {
+                if(this.api_sources[entry.api_name].type == entry.type) {
+                    console.log('new entry: ' + entry)
                     const payload = {
-                        type: e['type'],
-                        token: e['token'],
-                        secret: e['secret'],
-                        consumer_token: e['consumer_token'],
-                        consumer_secret: e['consumer_secret'],
-                        api_name: e['api_name']
+                        type: this.api_sources[entry.api_name].api_type,
+                        title: entry['title'],
+                        token: entry['token'],
+                        secret: entry['secret'] ? entry['secret'] : '',
+                        consumer_token: entry['consumer_token'] ? entry['consumer_token'] : '',
+                        consumer_secret: entry['consumer_secret'] ? entry['consumer_secret'] : '',
+                        api_name: entry['api_name']
                     }
-                    console.log(payload)
-                    const updated = this.updateSingleApi(payload);
+                    console.log('adding new: ' + payload)
+                    const updated = await this.addSingleApi(payload);
                     if(updated.error) {
-                        this.error.is = true
-                        this.error.msg = updated
+                        this.api_errors[updated.api_name].is = true
+                        this.api_errors[updated.api_name].msg = updated
                     }
                 }
-            });
+            // not new entry, update instead
+            } else {
+                console.log('update entry: ' + entry)
+                const payload = {
+                    type: this.api_sources[entry.api_name].api_type,
+                    title: entry['title'],
+                    token: entry['token'],
+                    secret: entry['secret'],
+                    consumer_token: entry['consumer_token'],
+                    consumer_secret: entry['consumer_secret'],
+                    api_name: entry['api_name']
+                }
+                console.log('updating existing: ' + payload)
+                const updated = this.updateSingleApi(payload);
+                
+                if(updated.error) {
+                    this.api_errors[updated.api_name].is = true
+                    this.api_errors[updated.api_name].msg = updated
+                }
+
+            }
+        },
+        async submitNew(title){
+            
         },
         deleteEntry(id) {
             this.entries.forEach(e => {
@@ -97,12 +130,12 @@ export default {
     },
     async created() {
        this.entries = await this.getApiList();
-       console.log(this.entries)
+    //    console.log(this.entries)
         await this.getSources();
 
     },
     computed: {
-        ...mapState(['api_list', 'api_sources']),
+        ...mapState(['api_list', 'api_sources', 'api_errors']),
         getApiSources() {
         return this.api_sources;
         },

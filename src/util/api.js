@@ -7,9 +7,13 @@ import getIp from './ip.js';
         this.inst  = axios.create({
             baseURL : 'https://api.cucked.soy:3002/api',
             headers: {
-                'Authorization': 'Bearer ' + $cookies.get('token'),
                 'Access-Control-Allow-Origin': '*',
-            }
+                'Content-Type': 'application/json',
+            },
+            transformRequest: [function(data, headers) {
+                headers['Authorization'] = 'Bearer ' + $cookies.get('token')
+                return data
+            }, ...axios.defaults.transformRequest]
         });
     }
     
@@ -50,10 +54,10 @@ import getIp from './ip.js';
 
     // not referenced in store. used for auth midleware in router
     // {'token': token, 'username': username } 
-    // Should really move token ito authorization header but it doesn't want to play nicely with me
+    // Should really move token to authorization header but it doesn't want to play nicely with me
     async getAuth(data) {
         const auth = await this.inst.post('/auth', data);
-        // console.log('auth: ' + auth.data.auth);
+        console.log('auth: ' + auth.data.auth);
         const tobool = auth.data.auth === 'true' ?  true : false
         // console.log(typeof(tobool))
         return tobool
@@ -67,10 +71,16 @@ import getIp from './ip.js';
         const list = await this.inst.post('/api-list', data);
         return list.data;
     }
-
+    // updates existing
     async updateApiEntry(data) {
         console.log(data);
         const entry = await this.inst.post('/update-source', data)
+        return entry.data
+    }
+    // adds new
+    async submitSingleApi(data) {
+        console.log(data);
+        const entry = await this.inst.post('/add-source', data)
         return entry.data
     }
 

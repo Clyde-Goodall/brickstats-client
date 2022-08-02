@@ -44,8 +44,13 @@
             }
         },
         mounted() {
-            // console.log(this.keys);
-            if(this.keys.token == null || this.keys.secret == null || this.keys.ckey == null|| this.keys.csecret == null) {
+            console.log(this.keys);
+            if(
+                this.keys.token == null || 
+                this.keys.secret == null || 
+                this.keys.consumer_token == null || 
+                this.keys.consumer_secret == null
+            ) {
                 this.$router.push({path: '/'});
             }
         },

@@ -17,8 +17,8 @@ export let store = createStore({
         keys: {
             token: null,
             secret: null,
-            ckey: null,
-            csecret: null,
+            consumer_token: null,
+            consumer_secret: null,
             api_name:  null,
         },
         secret: {
@@ -31,34 +31,64 @@ export let store = createStore({
             authenticated: false,
         },
         api_list: [],
-        api_sources: []
+        api_sources: [],
+        api_errors: {}
     },
     mutations: {
         //will set all api key/token info for onboarding process. 
         //by the time user has been created, their api creds will already be stored in db;
         setLocalEntry(state, data) {
-            state.keys.token = data.token;
-            state.keys.secret = data.secret;
-            state.keys.ckey = data.consumer_token;
-            state.keys.csecret = data.consumer_secret;
+            state.keys.token = data.token
+            state.keys.secret = data.secret
+            state.keys.consumer_token = data.consumer_token
+            state.keys.consumer_secret = data.consumer_secret
             state.api_name = data.api_name
-            console.log(data);
         },
+        // set local copy of list
         setApiList(state, data){
             state.api_list = data
         },
-        setUpdatedApi(state, data) {
-            return
-        },
-        //temporary api pulling for 
-        setSecretData(state, data) {
-            if(data) {
-                state.secret.orders = data.data.data;
+        // update either error or local ecopy
+        setUpdatedEntry(state, data) {
+            if(typeof data.error == 'string') {
+                state.api_errors[data.api_name] = data.error
             }
+            else { // gay code
+                console.log(state.api_list)
+                if(state.api_list.length > 0) {
+                console.log('unfucking error message')
+                    state.api_list.forEach(s => {
+                        //updates changes, but this is likely redundant because of how the changes are already stored in state.api_list
+                        if(s.title == data.data.title) {
+                            s.token = data.data.token
+                            s.new = false
+                            s.secret = data.data.secret
+                            s.consumer_token = data.data.consumer_token
+                            s.consumer_secret = data.data.consumer_secret
+                            s.title = data.data.title
+                        }
+                        // console.log(state.api_errors[data.data.api_name])
+                        delete state.api_errors[data.data.api_name]
+                    })
+                }
+            }
+        },
+        // add new entry will lead to this, ads to api_list
+        setProvisional(state, data) {
+            state.api_list.push({
+                api_name: data['api_name'],
+                new: true,
+                token: '',
+                secret: '',
+                title: '',
+                consumer_token: '',
+                consumer_secret: '',
+                type: data['type']
+            })
         },
         setSources(state, data) {
             if(data) {
-                state.api_sources = data;
+                state.api_sources = data
             }
         }
 
@@ -73,45 +103,47 @@ export let store = createStore({
         // hits /onboard with key info and pings the bricklink api to make sure it works/ks not duplicate before allowing user registration
         async initUserOnboard({commit}, keys) {
             // uses ip to tie creds to an individual pc
-            keys.ip = await getIp();
+            keys.ip = await getIp()
             // console.log(keys);
-            const cred_check = await inst.initOnboard(keys);
+            const cred_check = await inst.initOnboard(keys)
             // commits it to state so it holds the info during registration. 
             // Will be used to permit access to /register only if keys have value
             // Should still be corroborrated with the ApiEntry in the DB to make sure no one is abusing
-            console.log(cred_check);
+            console.log(cred_check)
             if(cred_check.data == false || cred_check.data == 'user_none') {
-                commit('setLocalEntry', keys);
+                console.log('COMMITTING')
+                commit('setLocalEntry', keys)
             }
             return cred_check;
         },
         async attemptRegister(_, data) {
             // use ip to get api cred entry tied to the computer and update it server-side w/ user info
             data.ip = await getIp();
-            const reg = await inst.registerUser(data);
-            // console.log(reg);
+            const reg = await inst.registerUser(data)
+            // console.log(reg)
             if(reg.data.token && reg.data.username){
-                $cookies.set('token', reg.data.token);
-                $cookies.set('username', reg.data.username);
+                $cookies.set('token', reg.data.token)
+                $cookies.set('username', reg.data.username)
             }
+
             return reg;
         },
 
         async attemptLogin(_, data) {
             data.ip = await getIp();
-            const login = await inst.loginUser(data);
+            const login = await inst.loginUser(data)
             // console.log(login.data.token);
             if(login.data.token && login.data.username) {
                 console.log('passed');
-                $cookies.set('token', login.data.token);
-                $cookies.set('username', login.data.username);
-                return login;
+                $cookies.set('token', login.data.token)
+                $cookies.set('username', login.data.username)
+                return login
             }
             return 'Could not login';
         },
 
         async checkAuth(_, data) {
-            const auth = await inst.getAuth(data);
+            const auth = await inst.getAuth(data)
             // console.log('auth: ' + auth);
             return auth;
         },
@@ -122,7 +154,7 @@ export let store = createStore({
 
         async getTopSecret({commit}, data) {
             // console.log(data);
-            const res = await inst.getSecretData(data);
+            const res = await inst.getSecretData(data)
             commit('setSecretData', res);
             return res.data;
         },
@@ -133,7 +165,7 @@ export let store = createStore({
             return res.data
         },
 
-        async lieApiCheck(_, data) {
+        async liveApiCheck(_, data) {
             const res = await inst.liveCheck(data)
             return res.data
         },
@@ -146,20 +178,25 @@ export let store = createStore({
         async getApiList({commit}) {
             const res = await inst.getUserApiList({'token': $cookies.get('token')});
             // console.log(res.data)
-            commit('setApiList', res.data);
+            commit('setApiList', res.data)
             return res.data
         },
+
         // updates api cred definitions, mainly through SavedApiView
         async updateSingleApi({commit}, data) {
-            const res = await inst.updateApiEntry(data);
-            if(res.data.error) {
-                return res.data;
-            }
-            commit('setUpdatedEntry', data);
+            const res = await inst.updateApiEntry(data)
+            commit('setUpdatedEntry', res);
+            return res.data
         },
 
-        async submitNew({commit}, data)  {
-            console.log(data);
+        async addSingleApi({commit}, data) {
+            const res = await inst.submitSingleApi(data)
+            commit('setUpdatedEntry', res);
+            return res.data
+        },
+
+        async addProvisionalEntry({commit}, data)  {
+            commit('setProvisional', data)
         }
     },
     getters: {
@@ -167,7 +204,7 @@ export let store = createStore({
         //tests to see if any data from csv(defunct) is available and will do something if there isn't.
         // currently unused
         isDataAvailable(state) {
-            let d = JSON.parse(JSON.stringify(state.transforms_data));
+            let d = JSON.parse(JSON.stringify(state.transforms_data))
             let check = true;
             for(let key in d) {
                 if(d.hasOwnProperty(key)) {
@@ -177,7 +214,7 @@ export let store = createStore({
                     }
                 }
             }
-            return check;
+            return check
         },
     }
 });
