@@ -6,8 +6,8 @@
         <div class="flex flex-col w-full px-10 h-auto">
             <form class="flex flex-col" method="#">
                 <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
-                <input type="username" name="username" placeholder="Username" v-model="user.username" @keyup="fetching = false"/>
-                <input type="password" name="password" placeholder="Password" v-model="user.password" @keyup="fetching = false"/>
+                <input type="username" name="user" placeholder="Username" v-model="user.username" @keyup="fetching = false"/>
+                <input type="password" name="pass" placeholder="Password" v-model="user.password" @keyup="fetching = false"/>
                 <input type="button" class="add-button" @click="triggerLogin" value="Login" :disabled="fetching && !error.is" />
                 <input type="button" class="non-submit-button" @click="goToRegister" value="Register" />       
            </form>
@@ -23,8 +23,8 @@
         data() {
             return {
                 user: {
-                    username: 'piss',
-                    password: 'pisswad',
+                    username: '',
+                    password: '',
                 },
                 fetching: false,
                 error: {
@@ -43,7 +43,6 @@
                 this.$router.push({path: '/register'});
             },  
             async triggerLogin(e) {
-                // e.preventDefault();
                 console.log('loggin in')
                 if(this.user.username && this.user.password) {
                     this.onb = null;

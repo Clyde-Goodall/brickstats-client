@@ -19,14 +19,14 @@
             <select name="API Selector" v-model="selected">
                 <option v-for="o in getApiSources" :key="o.id" :value="o.name">{{o.name}}</option>
             </select>
-            <div v-if="selected=='BrickLink'" class="w-full p-0 m-0">
+            <div v-if="selected == 'BrickLink'" class="w-full p-0 m-0">
                 <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
                 <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
                 <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
                 <input type="text" name="token" placeholder="Consumer Key" v-model="key.consumer_token" @keyup="fetching = false"/>
                 <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.consumer_secret" @keyup="fetching = false"/>
             </div>
-            <div v-if="selected=='BrickOwl'" class="w-full p-0 m-0">
+            <div v-if="selected == 'BrickOwl'" class="w-full p-0 m-0">
                 <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
                 <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
             </div>
@@ -74,7 +74,7 @@ export default {
                 'type': this.api_sources[i].api_type
             });
         }
-
+        console.log(this.options)
         this.key.token = import.meta.env.VITE_TOKEN_VALUE ? import.meta.env.VITE_TOKEN_VALUE : ''
         this.key.secret = import.meta.env.VITE_TOKEN_SECRET ? import.meta.env.VITE_TOKEN_SECRET : ''
         this.key.consumer_token = import.meta.env.VITE_CONSUMER_KEY ? import.meta.env.VITE_CONSUMER_KEY  : ''
@@ -84,39 +84,41 @@ export default {
         //makes function to test cred validity available
         ...mapActions(['initUserOnboard', 'getSources']),
         async triggerOnboard() {
-            this.onb = null;
-            this.fetching = true;
-            const opts = this.options.filter(o => o.name == this.selected.name)
+            this.onb = null
+            this.fetching = true
+            const opts = this.api_sources[this.selected]
+            console.log(opts.api_type)
+
             const payload = {
-                type: opts.type,
-                name: opts.name,
+                type: opts.api_type,
+                api_name: opts.name,
                 token: this.key.token,
                 secret: this.key.secret,
                 consumer_token: this.key.consumer_token,
                 consumer_secret: this.key.consumer_secret,
             }
-            this.onb = await this.initUserOnboard(this.key);
+            this.onb = await this.initUserOnboard(payload);
             // console.log(this.onb.data);
             if(this.onb.data == 'bad_connect') {
                 // Could not connect
-                this.error.is = true;
+                this.error.is = true
                 this.error.msg = 'Unable to verify credentials.';
-                this.fetching = false;
+                this.fetching = false
                 // This should only happen if someone is fucking w/ the code
             } else if(this.onb.data == 'invalid_type') {
-                this.error.is = true;
+                this.error.is = true
                 this.error.msg = 'Invalid API type >:(';
-                this.fetching = false;
+                this.fetching = false
             } else if(this.onb.data == false || this.onb.data == 'user_none') {
                 // works and creds unclaimed
                 // console.log('going to register');
-                this.$router.push('/register');
+                this.$router.push('/register')
             } else if(this.onb.data == true) {
                 // works and is claimed
-                this.$router.push('/login');
+                this.$router.push('/login')
             } else {
-                this.fetching = false;
-                this.onb = null; 
+                this.fetching = false
+                this.onb = null
             }
         }
     },

@@ -56,8 +56,8 @@ export let store = createStore({
             else { // gay code
                 console.log(state.api_list)
                 if(state.api_list.length > 0) {
-                console.log('unfucking error message')
                     state.api_list.forEach(s => {
+                        console.log(data.data.tid)
                         //updates changes, but this is likely redundant because of how the changes are already stored in state.api_list
                         if(s.title == data.data.title) {
                             s.token = data.data.token
@@ -66,6 +66,7 @@ export let store = createStore({
                             s.consumer_token = data.data.consumer_token
                             s.consumer_secret = data.data.consumer_secret
                             s.title = data.data.title
+                            s.tid = data.data.tid
                         }
                         // console.log(state.api_errors[data.data.api_name])
                         delete state.api_errors[data.data.api_name]
@@ -86,6 +87,12 @@ export let store = createStore({
                 type: data['type']
             })
         },
+        // gets rid of entry from api_list
+        setRemoval(state, tid) {
+            console.log(tid)
+            state.api_list = state.api_list.filter( l => l.tid !== tid)
+        },
+        // spit out the user's sources that (are most likely) vetted by test in the backend
         setSources(state, data) {
             if(data) {
                 state.api_sources = data
@@ -97,25 +104,26 @@ export let store = createStore({
 
         // 
         //  USER REGISTRATION/LOGIN/AUTHENTICATION
-        //  This should be complete for now barring any bugs
+        //  This should be more or less complete for now barring any bugs
         // 
 
         // hits /onboard with key info and pings the bricklink api to make sure it works/ks not duplicate before allowing user registration
-        async initUserOnboard({commit}, keys) {
+        async initUserOnboard({commit}, data) {
             // uses ip to tie creds to an individual pc
-            keys.ip = await getIp()
-            // console.log(keys);
-            const cred_check = await inst.initOnboard(keys)
+            data.ip = await getIp()
+            console.log(data);
+            const cred_check = await inst.initOnboard(data)
             // commits it to state so it holds the info during registration. 
             // Will be used to permit access to /register only if keys have value
             // Should still be corroborrated with the ApiEntry in the DB to make sure no one is abusing
             console.log(cred_check)
             if(cred_check.data == false || cred_check.data == 'user_none') {
-                console.log('COMMITTING')
-                commit('setLocalEntry', keys)
+                // console.log('COMMITTING')
+                commit('setLocalEntry', data)
             }
             return cred_check;
         },
+
         async attemptRegister(_, data) {
             // use ip to get api cred entry tied to the computer and update it server-side w/ user info
             data.ip = await getIp();
@@ -185,6 +193,7 @@ export let store = createStore({
         // updates api cred definitions, mainly through SavedApiView
         async updateSingleApi({commit}, data) {
             const res = await inst.updateApiEntry(data)
+            console.log(res)
             commit('setUpdatedEntry', res);
             return res.data
         },
@@ -195,8 +204,16 @@ export let store = createStore({
             return res.data
         },
 
+        // adds entry, no api data
         async addProvisionalEntry({commit}, data)  {
             commit('setProvisional', data)
+        },
+        // removes api entry if user hasn't actually added anything to it
+        // @setRemoval()
+        async removeEntry({commit}, tid)  {
+            console.log('r2')
+            commit('setRemoval', tid)
+            await inst.deleteApiEntry({data: tid})
         }
     },
     getters: {

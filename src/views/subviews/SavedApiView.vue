@@ -42,7 +42,7 @@
                 <!-- crud  -->
                 <div class="w-full flex justify-between">
                     <input type="button" class="add-button px-4" @click="submitChanges(entry)" value="Save" />
-                    <input type="button" class="delete-button px-4" @click="deleteEntry(entry)" value="Delete" />    
+                    <input type="button" class="delete-button px-4" @click="deleteEntry(entry.tid)" value="Delete" />    
                 </div>
             </form>
             </div>
@@ -61,7 +61,15 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getApiList', 'getSources', 'addProvisionalEntry', 'updateSingleApi', 'addSingleApi', 'liveApiCheck']),
+        ...mapActions([
+            'getApiList', 
+            'getSources', 
+            'addProvisionalEntry', 
+            'updateSingleApi', 
+            'addSingleApi', 
+            'liveApiCheck',
+            'removeEntry'
+        ]),
         addEntry() {
             if(this.selected) {
                 this.addProvisionalEntry({
@@ -79,6 +87,7 @@ export default {
                     console.log('new entry: ' + entry)
                     const payload = {
                         type: this.api_sources[entry.api_name].api_type,
+                        tid: entry['tid'],
                         title: entry['title'],
                         token: entry['token'],
                         secret: entry['secret'] ? entry['secret'] : '',
@@ -95,17 +104,18 @@ export default {
                 }
             // not new entry, update instead
             } else {
-                console.log('update entry: ' + entry)
+                console.log('entry tid: ' + entry['tid'])
                 const payload = {
                     type: this.api_sources[entry.api_name].api_type,
                     title: entry['title'],
+                    tid: entry['tid'],
                     token: entry['token'],
                     secret: entry['secret'],
                     consumer_token: entry['consumer_token'],
                     consumer_secret: entry['consumer_secret'],
                     api_name: entry['api_name']
                 }
-                console.log('updating existing: ' + payload)
+                console.log('updating existing: ' + payload.type)
                 const updated = this.updateSingleApi(payload);
                 
                 if(updated.error) {
@@ -115,24 +125,16 @@ export default {
 
             }
         },
-        async submitNew(title){
-            
-        },
-        deleteEntry(id) {
-            this.entries.forEach(e => {
-                if(e._id['$oid'] == id) {
-                    console.log('doing the thing');
-                    console.log(e)
-                    
-                }
-            });
+        // either deletes without server call or deletes from db then from client
+        deleteEntry(tid) {
+            console.log('r1')
+            this.removeEntry(tid)
         }
     },
     async created() {
-       this.entries = await this.getApiList();
-    //    console.log(this.entries)
+        // fetch user's apis
+        await this.getApiList();
         await this.getSources();
-
     },
     computed: {
         ...mapState(['api_list', 'api_sources', 'api_errors']),

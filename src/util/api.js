@@ -71,21 +71,23 @@ import getIp from './ip.js';
         const list = await this.inst.post('/api-list', data);
         return list.data;
     }
+    // adds new
+    async submitSingleApi(data) {
+        console.log(data);
+        const entry = await this.inst.post('/add-source', data)
+        return entry.data
+    }    
     // updates existing
     async updateApiEntry(data) {
         console.log(data);
         const entry = await this.inst.post('/update-source', data)
         return entry.data
     }
-    // adds new
-    async submitSingleApi(data) {
-        console.log(data);
-        const entry = await this.inst.post('/add-source', data)
-        return entry.data
+    async deleteApiEntry(data) {
+        return await this.inst.post('delete-source', data)
     }
-
     // for the homies
     async getSecretData(data) {
-        return this.inst.post('/topsecret', data);
+        return this.inst.post('/topsecret', data)
     }
  }
