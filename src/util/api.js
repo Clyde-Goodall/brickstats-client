@@ -84,7 +84,11 @@ import getIp from './ip.js';
         return entry.data
     }
     async deleteApiEntry(data) {
-        return await this.inst.post('delete-source', data)
+        return await this.inst.post('/delete-source', data)
+    }
+    async getOrderData(data) {
+        console.log(data)
+        return await this.inst.post('/get-orders', data)
     }
     // for the homies
     async getSecretData(data) {

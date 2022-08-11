@@ -33,7 +33,12 @@ input {
 input[type="text"], input[type="username"], input[type="password"], input[type="email"], select {
     @apply text-xl outline-none rounded-md border-4 border-pink-200  h-12 p-4 text-gray-600 transition-all duration-300;
 }
-
+input[type='date'] {
+    @apply text-xl outline-none rounded-md border-4 border-pink-200 w-auto px-2 text-gray-600 transition-all duration-300;
+}
+input[type='number'] {
+    @apply text-xl outline-none rounded-md border-4 border-pink-200 px-2 text-gray-600 transition-all duration-300;
+}
 input[type="text"]:focus, input[type="username"]:focus, input[type="password"]:focus, input[type="email"]:focus {
     @apply text-xl outline-none rounded-md border-4 border-pink-300  h-12 p-4 text-gray-600 shadow-md;
 }
@@ -45,7 +50,6 @@ select {
 option {
     @apply rounded-md;
 }
-
 
 /* classes */
 .add-button {

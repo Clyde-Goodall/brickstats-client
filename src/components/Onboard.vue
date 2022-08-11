@@ -1,6 +1,6 @@
 <template>
-    <div class="w-full flex flex-row p-10">
-        <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10 ">
+    <div class="w-full flex flex-row p-10 overflow-auto">
+        <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10  ">
             <h1 class="heading">What is this?</h1>
             <p>
                BrickStats is an API integrator and dashboard for checking your Bricklink account metrics with interactive charts in a user-friendly package. <br> Support for other platforms is <i>coming soon</i>.

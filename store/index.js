@@ -32,6 +32,7 @@ export let store = createStore({
         },
         api_list: [],
         api_sources: [],
+        order_data: [],
         api_errors: {}
     },
     mutations: {
@@ -97,6 +98,10 @@ export let store = createStore({
             if(data) {
                 state.api_sources = data
             }
+        },
+        // sets order data from all sources after sorting
+        setOrderData(state, data) {
+            state.order_data = data.data
         }
 
     },
@@ -159,37 +164,38 @@ export let store = createStore({
         // 
         //  UNSORTED UTILS
         // 
-
+        // will hopefully soon be obselete :)
         async getTopSecret({commit}, data) {
             // console.log(data);
             const res = await inst.getSecretData(data)
             commit('setSecretData', res);
             return res.data;
         },
-
+        // pulls from statics in db for spec info. (NOT user api list)
         async getSources({commit}) {
             const res = await inst.getApiSources();
             commit('setSources', res.data);
             return res.data
         },
-
-        async liveApiCheck(_, data) {
-            const res = await inst.liveCheck(data)
-            return res.data
-        },
+        // this would be used to check if an api works before submitting it, but the way it operates now is effectively just
+        // a response from the server that either eorks or shits out an error than does the same thing.
+        // async liveApiCheck(_, data) {
+        //     const res = await inst.liveCheck(data)
+        //     return res.data
+        // },
 
         // 
         //  API CRUD
-        // 
+        //  I should maybe reorder this so it's actually in the order CRUD but I'm lazy :')
 
         // fetches current list of apis associated wuth account
-        async getApiList({commit}) {
-            const res = await inst.getUserApiList({'token': $cookies.get('token')});
-            // console.log(res.data)
-            commit('setApiList', res.data)
-            return res.data
+        async getApiList({commit, state}) {
+            if(state.api_list.length == 0) {
+                const res = await inst.getUserApiList({'token': $cookies.get('token')});
+                // console.log(res.data)
+                commit('setApiList', res.data)
+            }
         },
-
         // updates api cred definitions, mainly through SavedApiView
         async updateSingleApi({commit}, data) {
             const res = await inst.updateApiEntry(data)
@@ -197,16 +203,26 @@ export let store = createStore({
             commit('setUpdatedEntry', res);
             return res.data
         },
-
-        async addSingleApi({commit}, data) {
-            const res = await inst.submitSingleApi(data)
-            commit('setUpdatedEntry', res);
-            return res.data
-        },
-
-        // adds entry, no api data
+        // adds entry after button press, no api data
         async addProvisionalEntry({commit}, data)  {
             commit('setProvisional', data)
+        },
+         // the actual add api function
+         async addSingleApi({commit}, data) {
+            const res = await inst.submitSingleApi(data)
+            commit('setUpdatedEntry', res);
+            // should probably unify everything and get rid of returns to suggest proper usage of states
+            return res.data
+        },
+        // get all order data from user's sources at once
+        async getOrders({commit, state}, data) {
+            if(state.order_data.length == 0){
+                const res = await inst.getOrderData(state.api_list)
+                console.log(res.data.data)
+                // sort that bih
+            
+                commit('setOrderData', res.data)
+            }
         },
         // removes api entry if user hasn't actually added anything to it
         // @setRemoval()
@@ -215,6 +231,7 @@ export let store = createStore({
             commit('setRemoval', tid)
             await inst.deleteApiEntry({data: tid})
         }
+
     },
     getters: {
         //this is what was initially supposed to be a middleware. 

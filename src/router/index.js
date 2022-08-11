@@ -12,6 +12,8 @@ import LoginView from '../views/LoginView.vue';
 import SecretView from '../views/SecretView.vue';
 import PreferenceView from '../views/subviews/PreferencesView.vue'
 import SavedApiView from '../views/subviews/SavedApiView.vue';
+import QueryBuilderView from '../views/subviews/QueryBuilderView.vue';
+
 
 // Most of this is self explanatory
 // Import route component -> make route entry -> point it to the component. You SHOULD be able to add middlewares in here too but fuck me I guess
@@ -42,13 +44,18 @@ const router = createRouter({
       path: '/dashboard',
       name: 'Dashboard',
       component: DashboardView,
-
+      // sub-views don't need a slash prepending the path
       props: true,
       children: [
         {
           path: 'apis',
           name: 'Saved Apis',
           component: SavedApiView
+        },
+        {
+          path: 'query',
+          name: 'Query Builder',
+          component: QueryBuilderView,
         },
         {
           path: 'charts',

@@ -18,8 +18,9 @@
             <form class="card-detail-text" :name="entry.api_name" method="#">
                 <h1 class="heading ml-5">{{entry.api_name}}</h1>
                 <div class="flex flex-col">
-                    <span class="err-msg" v-if="api_errors[entry.api_name]">{{ api_errors[entry.api_name] }}</span>
-
+                    <span class="err-msg" v-if="api_errors[entry.api_name]">
+                        {{ api_errors[entry.api_name] }}
+                    </span>
                     <div v-if="entry['api_name'] == 'BrickLink'" class="w-full p-0 m-0 flex flex-col">
                         <label class="cred-label">Title</label>
                         <input type="text" name="token" placeholder="Entry Title" v-model="entry['title']" @keyup="fetching = false"/>

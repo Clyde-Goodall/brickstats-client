@@ -1,6 +1,6 @@
 <template>
 <!-- top bar -->
-    <div class="top">
+    <div class="top fixed">
         <span class="flex justify-between items-top font-black text-white text-3xl flex-row items-center w-full">
             <span class="flex flex-row" @click="$router.push('/')">
                 <h1 class="text-white text-4xl uppercase">BrickStats</h1><h1 class="text-pink-500 text-2xl pl-2">Beta</h1>

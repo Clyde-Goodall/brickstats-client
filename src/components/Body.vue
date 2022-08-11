@@ -1,14 +1,16 @@
 <template>
 <!-- this is a container -->
-    <div class="w-full h-auto flex justify-center bg-pink-400">
-        <div :class="{'inner-container': true, [cWidth]: true, [cScroll]: true}">
-            <!-- Put anything you want rendered inside the Body tag wherever you include it in. See: "../views/HomeView.vue" -->
-            <slot>
-                <!-- Fallback -->
-                <div class="w-full flex content-center justify-center items-center">
-                    <h1 class="animate-pulse text-4xl font-black uppercase text-gray-500">Loading...</h1>
-                </div>
-            </slot>
+    <div class="w-screen h-screen overflow-auto">
+        <div class="w-full h-auto flex justify-center bg-pink-400 overflow-y-scroll">
+            <div class="inner-container w-3/4 overflow-y-scroll">
+                <!-- Put anything you want rendered inside the Body tag wherever you include it in. See: "../views/HomeView.vue" -->
+                <slot>
+                    <!-- Fallback -->
+                    <div class="w-full flex content-center justify-center items-center overflow-y-scroll">
+                        <h1 class="animate-pulse text-4xl font-black uppercase text-gray-500">Loading...</h1>
+                    </div>
+                </slot>
+            </div>
         </div>
     </div>
 </template>
