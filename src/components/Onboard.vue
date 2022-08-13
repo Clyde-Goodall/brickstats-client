@@ -8,10 +8,10 @@
             <h2 class="heading">Instructions</h2>
             <p>
                 Please add <b class="drop-shadow-sm">165.227.220.80</b> to Bricklink's API whitelist.
-                This is in <b>heavy beta</b>, so don't expect everything tow work super well. 
+                This is in <b>heavy beta</b>, so don't expect everything to work super well. 
                 You will also need to get your API credentials to make an account.<br><br>
                 For Bricklink, this can be found <a href="https://www.bricklink.com/v2/login.page?logFolder=h&logSub=&logInTo=https%3A%2F%2Fwww.bricklink.com%2Fv2%2Fapi%2Fregister_consumer.page" target="_">here</a>.<br>
-                This will be used to generate statistics and automatically renew order data for your dashboard, and <b>nothing else.</b><br>
+                This will be used to generate normalized data and provide statistics for sellers.
 
             </p>
         </div>

@@ -28,13 +28,15 @@
             <!-- BUYER -->
              <div class="filter-section w-full h-auto">
                 <div class="filter">
-                        <p class="text-sm">Buyer</p> <input class="font-bold text-gray-700 w-1/2 h-10 p-0" type="text" v-model="search_params.buyer" name="buyer"/>
+                        <p class="text-sm">Buyer</p> <input class="font-bold text-gray-700 w-1/2 h-10 py-0" type="text" v-model="search_params.buyer" name="buyer"/>
                 </div>
             </div>
             <!-- SOURCES -->
             <div class="filter-section w-full h-auto">
+                <!-- each checkbox will correlate to an object in data that has 
+                    its api type pulled from api_sources -->
                 <div v-for="entry in api_list" class="filter">
-                    <input type="checkbox" :name="entry.title" v-model="search_params.included[entry['tid']]"/> 
+                    <input type="checkbox" :name="entry.title" @change="setIncluded($event, entry.tid)" :value="entry.api_name" checked/> 
                     <span>
                         <p class="text-md font-bold text-gray-700">{{entry.title.length > 0 ? entry.title : 'Untitled Source'}}</p>
                         <p class="text-xs font-light text-500 rounded-md bg-pink-500 box-border px-2 w-fit text-white">{{entry.api_name}}</p>
@@ -57,7 +59,6 @@
         </div>
     </div>
 </template>
-
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
 import SpreadSheet from '../../components/SpreadSheet.vue'
@@ -90,27 +91,29 @@ export default {
     async created() {
         await this.getApiList()
         await this.getOrders()
-        // console.log(this.api_list)
+        await this.getSources()
+
+        // builds inclusion object
         this.api_list.forEach(o => {
-            this.search_params.included.push({'tid': o['tid'], value: false})
+            this.search_params.included.push({tid: o['tid'], api_name: o['api_name'], value: true})
             this.tids.push(o['tid'])
         })
         this.loaded = true
-        console.log(this.tids)
     },
     methods: {
-        ...mapActions(['getApiList', 'getOrders'])
+        ...mapActions(['getApiList', 'getOrders', 'getSources']),
+        // sets data source inclusions on checkbox change
+        setIncluded(e, tid) {
+            console.log('updating inclusions')
+            this.search_params.included.forEach(i => {
+                if(i.tid == tid) {
+                    e.target.checked ? i.value = true : i.value = false
+                }
+            })
+        }
     },
     computed: {
-        ...mapState(['api_list', 'order_data']),
-        getColumns() {
-
-        },
-        formattedData() {
-            // const linked = this.order_data.map(o => {
-            //     if()
-            // })
-        }
+        ...mapState(['api_list', 'order_data', 'api_sources']),
     }
 }
 </script>

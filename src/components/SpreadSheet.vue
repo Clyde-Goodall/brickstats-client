@@ -1,9 +1,9 @@
 <template>
-    <div class="w-full h-full overflow-scroll mb-24">
+    <div class=" w-auto h-auto overflow-scroll mb-24 mr-24 ">
         <div class="w-full h-full" v-if="!isLoading">
             <table class="table-fixed">
                 <thead>
-                    <tr class="border-t border-gray-200">
+                    <tr class="border-t">
                         <th v-for="col in columns">
                             {{col}}
                         </th>
@@ -31,36 +31,46 @@ export default {
             thing: ''
         }
     },
-    created() {
-    },
-    methods: {
-        data_sorter() {
 
-            
-        },
+    methods: {
         is_loading() {
             return this.tableData == undefined
         }
     },
     computed: {
         columns() {
-            return Object.keys(this.tableData[0])
+            const cols = Object.keys(this.tableData[0])
+            return cols.filter(c => c != 'tid')
         },
+        mounted() {
+        },
+        // so far: date, price, buyer name
         filtered_results() {
             const mapped_data = Object.keys(this.tableData).map(k => {
             return this.tableData[k]
             })
-
+            console.log(mapped_data[0])
+            // self explanatory
             const from = this.search_params.date.from
             const to = this.search_params.date.to 
-
+            // subtotal of order
             const price_min = this.search_params.price.from
             const price_max = this.search_params.price.to
-
+            // user that bought
             const buyer = this.search_params.buyer
+            // api sources
+            const included = this.search_params.included
 
-            console.log(`from: ${from}, to: ${to}`)
-            const filtered_by_date = mapped_data.filter((entry, i, arr) => {
+            const filtered_by_source = mapped_data.filter((entry, i, arr) => {
+                if(included != undefined) {
+                    const found = included.find(i => i.tid == entry.tid)
+                    console.log('found inclusions: ' + found)
+                    return found.value ? found.value : false
+                }
+                return true
+            })
+
+            const filtered_by_date = filtered_by_source.filter((entry, i, arr) => {
                 //  this can be made better but I"m just trying to get it working right now. Probably slow affff
                 // filter by from & to
                 if(
@@ -104,15 +114,20 @@ export default {
             })
             
             const filtered_by_buyer = filtered_by_price.filter((entry, i, arr) => {
-                return ((buyer != '') && (buyer != undefined)) ? entry.buyer.includes(buyer) : entry.buyer
+                return ((buyer != '') && (buyer != undefined)) ? (entry.buyer.includes(buyer) ): entry
             })
 
-            return filtered_by_buyer
+            const final = filtered_by_buyer.map(({tid, ...attrs}) => attrs)
+
+            return final
         },
     }
 }
 </script>
 <style scoped>
+tr:first {
+    @apply bg-gray-200
+}
 
 tr {
     @apply border-b border-gray-200 text-gray-800 text-lg whitespace-nowrap
