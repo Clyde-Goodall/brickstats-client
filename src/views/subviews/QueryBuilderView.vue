@@ -43,8 +43,27 @@
                     </span>
                 </div>
             </div>
-            <div class="filter-section w-full h-auto">
-                <input type="button" class="non-submit-button w-full p-0 m-0 text-xl text-gray-500 " value="Download as CSV"/>
+            <!-- gives pading to offset top bar -->
+            <div class="filter-section w-full pb-48">
+                <div class="filter h-full">
+                    <div class="flex flex-col w-full">
+                        <div class="flex flex-col w-full">
+                        <span class="text-sm flex items-center">
+                            <input type="checkbox" @change="setOpts('use_original_data')" v-model="use_original_data" name="use_original-data"/> Use original, unmodified data. (this will be multiple files)
+                        </span>
+                        <!-- <span class="text-sm">
+                            <input type="checkbox" @change="" name="" class="mr-1" :disabled="!use_normalized"/>
+                        </span>
+                        <span class="text-sm">
+                            <input type="checkbox" name="" class="mr-1" :disabled="!use_normalized"/>
+                        </span>
+                        <span class="text-sm">
+                            <input type="checkbox" name=""/>
+                        </span> -->
+                    </div>
+                        <input type="button" class="non-submit-button w-full p-0 m-0 text-xl text-gray-500 " value="Download as CSV"/>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- add correction padding for sidebar size, curently ~13. 
@@ -83,6 +102,11 @@ export default {
                 included: [],
                 string: ''
             },
+            opts: [
+                {cat: 'use_original_data', value: 'false'},
+                {cat: '', value: 'false'}
+
+            ],
             tids: [],
             columns: [],
             loaded: false
@@ -104,9 +128,15 @@ export default {
         ...mapActions(['getApiList', 'getOrders', 'getSources']),
         // sets data source inclusions on checkbox change
         setIncluded(e, tid) {
-            console.log('updating inclusions')
             this.search_params.included.forEach(i => {
                 if(i.tid == tid) {
+                    e.target.checked ? i.value = true : i.value = false
+                }
+            })
+        },
+        setOpts(e, opt) {
+            this.opts.forEach(i => {
+                if(i[opt] == opt) {
                     e.target.checked ? i.value = true : i.value = false
                 }
             })
@@ -119,7 +149,7 @@ export default {
 </script>
 <style scoped>
 .filter {
-    @apply w-full h-16 box-border p-2 bg-white text-lg flex flex-row items-center;
+    @apply w-full h-auto box-border p-2 bg-white text-lg flex flex-row items-center;
 }
 .filter-section {
     @apply mb-5

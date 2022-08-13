@@ -49,7 +49,6 @@ export default {
             const mapped_data = Object.keys(this.tableData).map(k => {
             return this.tableData[k]
             })
-            console.log(mapped_data[0])
             // self explanatory
             const from = this.search_params.date.from
             const to = this.search_params.date.to 
@@ -64,7 +63,6 @@ export default {
             const filtered_by_source = mapped_data.filter((entry, i, arr) => {
                 if(included != undefined) {
                     const found = included.find(i => i.tid == entry.tid)
-                    console.log('found inclusions: ' + found)
                     return found.value ? found.value : false
                 }
                 return true
@@ -77,7 +75,6 @@ export default {
                     from != '' &&
                     to != ''
                 ) {
-                    console.log('sorting by both')
                     return entry.order_date >= from && entry.order_date <= to
                 }
                 // filter by from
@@ -85,7 +82,6 @@ export default {
                     from != '' &&
                     to == '' 
                 ) {
-                    console.log('sorting by from')
                     return entry.order_date >= from 
                 }
                 // filter by to
@@ -93,14 +89,12 @@ export default {
                     to != '' &&
                     from == ''
                 ) {
-                    console.log('sorting by to')
                     return entry.order_date <= to 
                 }
                 else if(
                     from == '' &&
                     to == ''
                 ) {
-                    console.log('sorting by neither')
                     return entry
                 }
                 return entry
@@ -118,7 +112,6 @@ export default {
             })
 
             const final = filtered_by_buyer.map(({tid, ...attrs}) => attrs)
-
             return final
         },
     }
