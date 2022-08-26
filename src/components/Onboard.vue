@@ -16,21 +16,21 @@
             </p>
         </div>
         <div class="flex flex-col w-full px-10 h-auto">
-            <select name="API Selector" v-model="selected">
+            <select name="API Selector" v-model="selected" class="input-col">
                 <option v-for="o in getApiSources" :key="o.id" :value="o.name">{{o.name}}</option>
             </select>
             <div v-if="selected == 'BrickLink'" class="w-full p-0 m-0">
                 <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
-                <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
-                <input type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
-                <input type="text" name="token" placeholder="Consumer Key" v-model="key.consumer_token" @keyup="fetching = false"/>
-                <input type="text" name="secret" placeholder="Consumer Secret" v-model="key.consumer_secret" @keyup="fetching = false"/>
+                <input class="input-col" type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
+                <input class="input-col" type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
+                <input class="input-col" type="text" name="token" placeholder="Consumer Key" v-model="key.consumer_token" @keyup="fetching = false"/>
+                <input class="input-col" type="text" name="secret" placeholder="Consumer Secret" v-model="key.consumer_secret" @keyup="fetching = false"/>
             </div>
             <div v-if="selected == 'BrickOwl'" class="w-full p-0 m-0">
                 <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
-                <input type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
+                <input class="input-col" type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
             </div>
-            <input type="button" class="add-button" @click="triggerOnboard" value="Add" :disabled="fetching && !error.is">
+            <input type="button" class="add-button input-col" @click="triggerOnboard" value="Add" :disabled="fetching && !error.is">
 
         </div>
     </div>

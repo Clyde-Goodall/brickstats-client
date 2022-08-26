@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-full bg-gray-200 flex flex-row fixed overflow-y-scroll">
+    <div class="w-full h-full flex flex-row fixed overflow-y-scroll">
         <!-- quick stat overview -->
         <div class=" w-80 bg-pink-600 h-full box-border z-10 p-5 overflow-y-scroll">
             <!-- query building area -->
@@ -7,12 +7,12 @@
             <div class="filter-section w-full h-auto">
                 <div class="filter">
                     <div class="date-picker">
-                        <p class="text-sm">From</p><input class="ml-5 font-bold text-gray-700" type="date" v-model="search_params.date.from" name="from-date"/>
+                        <p class="qb-text ml-2">From</p><input class="ml-5 font-bold text-gray-700" type="date" v-model="search_params.date.from" name="from-date"/>
                     </div>
                 </div>
                 <div class="filter">
                     <div class="date-picker">
-                        <p class="text-sm">To</p><input class="ml-5 font-bold text-gray-700 h-auto" type="date" v-model="search_params.date.to" name="to-date"/>
+                        <p class="qb-text ml-2">To</p><input class="ml-5 font-bold text-gray-700 h-auto" type="date" v-model="search_params.date.to" name="to-date"/>
                     </div>
                 </div>
             </div>
@@ -20,15 +20,15 @@
             <div class="filter-section w-full h-auto">
                 <div class="filter">
                     <div class="date-picker">
-                        $ <input class="font-bold text-gray-700 w-20" type="number" v-model="search_params.price.from" name="from-date"/>
-                        <p class="text-sm">to</p> <input class="font-bold text-gray-700 h-auto w-20" type="number" v-model="search_params.price.to" name="to-date"/>
+                        <p class="qb-text ml-3">$</p> <input class="font-bold text-gray-700 w-20 ml-2 mr-2" type="number" v-model="search_params.price.from" name="from-date"/>
+                        <p class="qb-text ml-2">to</p> <input class="font-bold text-gray-700 h-auto w-20 ml-2" type="number" v-model="search_params.price.to" name="to-date"/>
                     </div>
                 </div>
             </div>
             <!-- BUYER -->
              <div class="filter-section w-full h-auto">
                 <div class="filter">
-                        <p class="text-sm">Buyer</p> <input class="font-bold text-gray-700 w-1/2 h-10 py-0" type="text" v-model="search_params.buyer" name="buyer"/>
+                        <p class="qb-text">Buyer</p> <input class="font-bold text-gray-700 w-1/2 h-10 py-0" type="text" v-model="search_params.buyer" name="buyer"/>
                 </div>
             </div>
             <!-- SOURCES -->
@@ -49,26 +49,26 @@
                     <div class="flex flex-col w-full">
                         <div class="flex flex-col w-full">
                         <span class="text-sm flex items-center">
-                            <input type="checkbox" @change="setOpts('use_original_data')" v-model="use_original_data" name="use_original-data"/> Use original, unmodified data. (this will be multiple files)
-                        </span>
-                        <!-- <span class="text-sm">
-                            <input type="checkbox" @change="" name="" class="mr-1" :disabled="!use_normalized"/>
+                            <input type="checkbox" :disabled="opts[1].value" name="use_original-data" v-model="opts[0].value"/> Use original, unmodified data. (this will be multiple files)
                         </span>
                         <span class="text-sm">
+                            <input type="checkbox" name="use_filters" :disabled="opts[0].value" v-model="opts[1].value"/> Use filter parameters
+                        </span>
+                        <!-- <span class="text-sm">
                             <input type="checkbox" name="" class="mr-1" :disabled="!use_normalized"/>
                         </span>
                         <span class="text-sm">
                             <input type="checkbox" name=""/>
                         </span> -->
                     </div>
-                        <input type="button" class="non-submit-button w-full p-0 m-0 text-xl text-gray-500 " value="Download as CSV"/>
+                        <input type="button" class="non-submit-button w-full p-0 m-0 text-xl text-gray-500 " @click="triggerCsv()" value="Download as CSV"/>
                     </div>
                 </div>
             </div>
         </div>
         <!-- add correction padding for sidebar size, curently ~13. 
             PLEASE change this to something not hardcoded soon, future me :/ -->
-        <div class="flex-1 h-full text-black bg-white overflow-x-scroll " v-if="loaded"> 
+        <div class="flex-1 h-full text-black overflow-x-scroll " v-if="loaded"> 
                 <SpreadSheet :tableData="order_data" :search_params="search_params"/>
         </div>
         <div v-else class="flex-1 w-full h-full flex items-center justify-center">
@@ -79,8 +79,9 @@
     </div>
 </template>
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex'
 import SpreadSheet from '../../components/SpreadSheet.vue'
+import {flattenJson, getCsv} from '../../util/csv.js'
 
 export default {
     name: 'QueryBuilderView',
@@ -103,9 +104,8 @@ export default {
                 string: ''
             },
             opts: [
-                {cat: 'use_original_data', value: 'false'},
-                {cat: '', value: 'false'}
-
+                {cat: 'use_original_data', value: false, available: true},
+                {cat: 'use_filters', value: false, available: false}
             ],
             tids: [],
             columns: [],
@@ -134,37 +134,35 @@ export default {
                 }
             })
         },
+        // set csv download options
         setOpts(e, opt) {
+            console.log(this.order_data)
             this.opts.forEach(i => {
                 if(i[opt] == opt) {
                     e.target.checked ? i.value = true : i.value = false
                 }
             })
+        },
+        // get downloads
+        triggerCsv() {
+            if(this.opts[0].value == true) {
+                console.log('getting original')
+                this.order_data.forEach(o => {
+                    const download = getCsv(o, this.api_list, null, true)
+                })
+            } else {
+                const download = getCsv(this.order_data, null, 'AllData', false)
+            }
         }
     },
     computed: {
-        ...mapState(['api_list', 'order_data', 'api_sources']),
+        ...mapState(['api_list', 'order_data', 'api_sources', 'table_data']),
     }
 }
 </script>
-<style scoped>
-.filter {
-    @apply w-full h-auto box-border p-2 bg-white text-lg flex flex-row items-center;
-}
-.filter-section {
-    @apply mb-5
-}
-.filter-section .filter:only-child {
-    @apply rounded-lg;
-}
- .filter-section .filter:first-child {
-    @apply rounded-t-lg;
-}
-.filter-section .filter:last-child {
-    @apply rounded-b-lg;
-}
 
-.date-picker {
-    @apply flex items-center justify-between w-full
+<style>
+.qb-text {
+    @apply font-semibold;
 }
 </style>

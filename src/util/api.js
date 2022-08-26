@@ -4,8 +4,11 @@ import getIp from './ip.js';
  export default class Api {
     //need cookies for auth headers, jwt token stuff
     constructor() {
+        console.log('mode: ' + import.meta.env.VITE_NODE_ENV)
+        const base = import.meta.env.VITE_NODE_ENV == 'prod' ? 'https://165.227.220.80:3002/api' : 'https://142.93.74.81:3002/api'
+        console.log(base)
         this.inst  = axios.create({
-            baseURL : 'https://api.cucked.soy:3002/api',
+            baseURL : base,
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json',
@@ -89,6 +92,9 @@ import getIp from './ip.js';
     async getOrderData(data) {
         console.log(data)
         return await this.inst.post('/get-orders', data)
+    }
+    async getFreshOrderData() {
+        return await this.inst.post('/get-all-raw')
     }
     // for the homies
     async getSecretData(data) {

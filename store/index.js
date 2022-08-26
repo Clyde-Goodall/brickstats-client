@@ -32,7 +32,12 @@ export let store = createStore({
         },
         api_list: [],
         api_sources: [],
-        order_data: [],
+        // pre table filters
+        order_data: [],   
+        //  post filters
+        table_data: [],
+        // all un-standardized api output
+        raw_data: {},
         api_errors: {}
     },
     mutations: {
@@ -102,10 +107,22 @@ export let store = createStore({
         // sets order data from all sources after sorting
         setOrderData(state, data) {
             state.order_data = data.data
+        },
+        // sets table data to be used for csv generation
+        setTableData(state, data) {
+            state.table_data = data
+        },
+        // sets raw, un-standardized order data for each api
+        setRawData(state, data) {
+            state.raw_data = data
         }
 
     },
     actions: {
+        // table data shit for csv generation and track keeping
+        storeTableData({commit}, data) {
+            commit('setTableData', data)
+        },
 
         // 
         //  USER REGISTRATION/LOGIN/AUTHENTICATION
@@ -223,6 +240,12 @@ export let store = createStore({
             
                 commit('setOrderData', res.data)
             }
+        },
+        // gets all orders for each api entry to serve independently
+        async getRawOrders() {
+            const res = await inst.getFreshOrderData()
+            console.log(res.data)
+            this.commit('setRawOrders', res.data)
         },
         // removes api entry if user hasn't actually added anything to it
         // @setRemoval()

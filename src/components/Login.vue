@@ -4,7 +4,7 @@
             <h1 class="heading">Login</h1>
         </div>
         <div class="flex flex-col w-full px-10 h-auto">
-            <form class="flex flex-col" method="#">
+            <form class="flex flex-col" method="#" @keyup.enter="handleEnter()">
                 <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
                 <input type="username" name="user" placeholder="Username" v-model="user.username" @keyup="fetching = false"/>
                 <input type="password" name="pass" placeholder="Password" v-model="user.password" @keyup="fetching = false"/>
@@ -39,25 +39,30 @@
         methods: {
             //makes function to test cred validity available
             ...mapActions(['attemptLogin', 'checkAuth']),
+            handleEnter(e) {
+                if(this.user.password && this.user.password) {
+                    this.triggerLogin()
+                }
+            },
             goToRegister() {
                 this.$router.push({path: '/register'});
             },  
             async triggerLogin(e) {
                 console.log('loggin in')
                 if(this.user.username && this.user.password) {
-                    this.onb = null;
-                    this.fetching = true;
-                     const log = await this.attemptLogin(this.user);  
+                    this.onb = null
+                    this.fetching = true
+                     const log = await this.attemptLogin(this.user) 
                     if(this.$cookies.get('token') && this.$cookies.get('username')) {
-                        const auth = await this.checkAuth({'token': $cookies.get('token'), 'username': $cookies.get('username')});
+                        const auth = await this.checkAuth({'token': $cookies.get('token'), 'username': $cookies.get('username')})
                         if(auth) {
-                            this.$router.push({path: '/dashboard/charts'});
+                            this.$router.push({path: '/dashboard/charts'})
                         }
                     } 
                     if(log.data.error != null) {
-                        this.fetching = false;
-                        this.error.is = true;
-                        this.error.msg = log.data.error;
+                        this.fetching = false
+                        this.error.is = true
+                        this.error.msg = log.data.error
                     }
                 }
                 

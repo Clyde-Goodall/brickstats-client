@@ -1,29 +1,6 @@
 <template>
     <div class="flex flex-row h-auto flex-wrap p-10 justify-center ">
         <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-        
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
-
     </div>
 </template>
 
