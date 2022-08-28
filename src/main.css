@@ -87,6 +87,10 @@ button {
     @apply bg-gradient-to-br from-gray-800 to-gray-900 text-gray-100 shadow-lg;
  }
 
+.top-bar-offset {
+    @apply h-24 w-full;
+}
+
 .non-submit-button {
     @apply outline-none border rounded-md bg-white font-extrabold box-border shadow-md select-none h-12 text-xl text-gray-600;
 }
@@ -137,7 +141,7 @@ button {
 
 /* table view filter css */
 .filter {
-    @apply w-full h-auto box-border p-2 bg-white text-lg flex flex-row items-center;
+    @apply w-full h-auto box-border p-2 shadow-md bg-white text-lg flex flex-row items-center;
 }
 .filter-section {
     @apply mb-5

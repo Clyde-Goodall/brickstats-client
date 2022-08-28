@@ -86,12 +86,20 @@ import getIp from './ip.js';
         const entry = await this.inst.post('/update-source', data)
         return entry.data
     }
+    // Do I need to explain
     async deleteApiEntry(data) {
         return await this.inst.post('/delete-source', data)
     }
+    // multiple orders
     async getOrderData(data) {
         console.log(data)
         return await this.inst.post('/get-orders', data)
+    }
+    // single order
+    async getOrderDetails(data) {
+        console.log(data)
+        const res = await this.inst.post('/get-order-details', data)
+        return res.data
     }
     async getFreshOrderData() {
         return await this.inst.post('/get-all-raw')

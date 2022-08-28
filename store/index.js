@@ -38,7 +38,8 @@ export let store = createStore({
         table_data: [],
         // all un-standardized api output
         raw_data: {},
-        api_errors: {}
+        api_errors: {},
+        order_details: {}
     },
     mutations: {
         //will set all api key/token info for onboarding process. 
@@ -107,6 +108,9 @@ export let store = createStore({
         // sets order data from all sources after sorting
         setOrderData(state, data) {
             state.order_data = data.data
+        },
+        setOrderDetails(state, data) {
+            state.order_details = data
         },
         // sets table data to be used for csv generation
         setTableData(state, data) {
@@ -189,10 +193,12 @@ export let store = createStore({
             return res.data;
         },
         // pulls from statics in db for spec info. (NOT user api list)
-        async getSources({commit}) {
-            const res = await inst.getApiSources();
-            commit('setSources', res.data);
-            return res.data
+        async getSources({commit, state}) {
+            if(state.api_sources.length == 0) {
+                const res = await inst.getApiSources();
+                commit('setSources', res.data);
+                return res.data
+            }
         },
         // this would be used to check if an api works before submitting it, but the way it operates now is effectively just
         // a response from the server that either eorks or shits out an error than does the same thing.
@@ -239,6 +245,14 @@ export let store = createStore({
                 // sort that bih
             
                 commit('setOrderData', res.data)
+            }
+        },
+        // gets individual order details
+        async getOrderDetails({commit, state}, data) {
+            console.log('getting order for ' + data.order_id)
+            if(Object.keys(state.order_details).length != 0) {
+                const res =  await inst.getOrderDetails(data)
+                commit('setOrderDetails', res)
             }
         },
         // gets all orders for each api entry to serve independently
