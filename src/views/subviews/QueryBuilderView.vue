@@ -1,7 +1,9 @@
 <template>
     <div class="w-full h-full flex flex-row fixed overflow-y-scroll">
         <!-- quick stat overview -->
-        <div class=" w-80 bg-pink-600 h-full box-border z-10 p-5 overflow-y-scroll">
+        <Transition name="in" mode="out-in" appear>
+
+        <div class="w-80 bg-pink-600 h-full box-border z-10 p-5 overflow-y-scroll">
             <!-- query building area -->
             <!-- DATE -->
             <div class="filter-section w-full h-auto">
@@ -66,12 +68,13 @@
                 </div>
             </div>
         </div>
+        </Transition>
         <!-- add correction padding for sidebar size, curently ~13. 
             PLEASE change this to something not hardcoded soon, future me :/ -->
-        <div class="flex-1 h-full text-black overflow-x-scroll " v-if="loaded"> 
+        <div class="flex-1 h-fullw overflow-x-scroll " v-if="loaded"> 
                 <SpreadSheet :tableData="order_data" :search_params="search_params"/>
         </div>
-        <div v-else class="flex-1 w-full h-full flex items-center justify-center">
+        <div v-else class="flex-1 h-full flex items-center justify-center">
             <h1 class="animate-pulse -mt-24 -ml-36 font-bold text-8xl text-gray-800">
                 Loading
             </h1>
@@ -81,7 +84,7 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
 import SpreadSheet from '../../components/SpreadSheet.vue'
-import {flattenJson, getCsv} from '../../util/csv.js'
+import {getCsv} from '../../util/csv.js'
 
 export default {
     name: 'QueryBuilderView',

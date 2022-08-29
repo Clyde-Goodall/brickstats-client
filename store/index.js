@@ -249,8 +249,9 @@ export let store = createStore({
         },
         // gets individual order details
         async getOrderDetails({commit, state}, data) {
-            console.log('getting order for ' + data.order_id)
-            if(Object.keys(state.order_details).length != 0) {
+            if(Object.keys(state.order_details).length == 0) {
+                console.log('getting order for ' + data.order_id)
+
                 const res =  await inst.getOrderDetails(data)
                 commit('setOrderDetails', res)
             }

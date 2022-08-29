@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full">
-        <Transition name="detail-swap" mode="out-in">
-            <div v-if="order_info.show_details" class="w-full h-full flex justify-center items-center overflow-scroll bg-white">
+        <Transition name="in" mode="out-in" appear>
+            <div v-if="order_info.show_details" class="w-full h-full flex justify-center items-center overflow-scrol">
                 <div class="detail-container mr-16 p-5">
                     <div class="w-full text-right">
                     <button @click="hideDetailView()">
@@ -22,18 +22,11 @@
                     </button>
                    </div>
                    <div class="detail-section pb-48">
-                        <h1 class="text-4xl font-bold"> Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order</h1>
-                        <h1 class="text-4xl font-bold"> Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order</h1>
-                        <h1 class="text-4xl font-bold"> Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order</h1>
-                        <h1 class="text-4xl font-bold"> Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order</h1>
-                        <h1 class="text-4xl font-bold"> Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order</h1>
-                        <h1 class="text-4xl font-bold"> Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order</h1>
-                        <h1 class="text-4xl font-bold"> Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order Order</h1>
+                        <h1 class="text-4xl font-bold">Order data goes here</h1>
+                        <p>bla bla bla</p>
                     </div>
                 </div>
             </div>
-        <!-- </Transition>
-        <Transition name="detail-unswap"> -->
             <div v-else-if="!order_info.show_details" class=" w-auto h-auto overflow-scroll mb-24 mr-24 flex items-center justify-center">
                 
                 <div v-if="filtered_results.length == 0" class="text-pink-700 w-full h-screen -mt-20 overflow-hidden text-6xl flex font-bold justify-center items-center">
@@ -42,7 +35,7 @@
                 <div v-if="!details" class="w-full h-full box-border p-5">
                     <!-- row item cards -->
                     <div 
-                        class="mb-5 bg-white rounded-xl justify-between box-border shadow-md flex flex-row items-center h-auto flex-wrap" 
+                        class="mb-5  bg-white rounded-lg justify-between box-border shadow-lg flex flex-row items-center h-auto flex-wrap" 
                         v-for="row in filtered_results"
                     >
                     
@@ -231,54 +224,27 @@ export default {
 </script>
 <style scoped>
 
-.detail-swap-enter-active,
-.detail-swap-leave-active
+.in-enter-active,
+.in-leave-active
 {
-    transition: all .2s ease;
+    transition: all .3s ease;
 }
 
-.detail-unswap-enter-active,
-.detail-unswap-leave-active {
-    transition: all .3s ease-in-out;
+.in-enter-active,
+.in-leave-active {
+    transition: all .3s ease-out;
 
 }
 
-.detail-swap-enter-from,
-.detail-swap-leave-to {
-    transform: translateY(-20px);
+.in-enter-from,
+.in-leave-to {
+    transform: translateY(-10px);
     opacity:0;
 }
 
-.detail-unswap-enter-from,
-.detail-unswap-leave-to {
-    transform: translateY(10px);
-    opacity:0;
-}
-
-.v
-
-tr:first {
-    @apply bg-gray-200
-}
-
-tr {
-    @apply border-b border-gray-200 text-gray-800 text-lg whitespace-nowrap
-}
-
-tr:nth-child(odd) {
-    @apply bg-gray-100
-}
-
-td {
-    min-width: 15vh;
-}
-
-td, th {
-    @apply border-r border-gray-300 p-2 w-16 overflow-x-scroll
-}
 /* detail view */
 .detail-container {
-    @apply w-full h-full bg-white flex flex-col items-center;
+    @apply w-full h-full bg-white flex flex-col items-center p-4;
 }
 
 .detail-section {

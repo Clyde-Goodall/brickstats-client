@@ -159,3 +159,23 @@ button {
 .date-picker {
     @apply flex items-center justify-between w-full
 }
+
+/* vue transition animations */
+/* intitial pop in slide */
+.in-enter-active,
+.in-leave-active
+{
+    transition: all .3s ease;
+}
+
+.in-enter-active,
+.in-leave-active {
+    transition: all .3s ease-out;
+
+}
+
+.in-enter-from,
+.in-leave-to {
+    transform: translateY(-10px);
+    opacity:0;
+}

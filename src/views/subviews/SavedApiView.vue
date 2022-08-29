@@ -1,6 +1,7 @@
 <template>
     <!-- quick stat overview -->
      <!-- operations -->
+    
     <div class="w-full bg-pink-600 fixed block px-5 z-10">
         <!-- supported API selector
          -->
@@ -12,6 +13,7 @@
     <div class="w-full h-24"></div>
 
     <div class="w-full box-border p-10 flex flex-row flex-wrap ">
+        <TransitionGroup name="in" mode="out-in" appear>
 
         <!-- User API CRUD -->
         <div class="api-crud-card mb-10" v-for="entry in api_list" :key="entry.api_name">
@@ -47,7 +49,8 @@
                 </div>
             </form>
             </div>
-    </div>  
+        </TransitionGroup>
+    </div> 
 </template>
 
 <script>

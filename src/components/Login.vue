@@ -56,7 +56,7 @@
                     if(this.$cookies.get('token') && this.$cookies.get('username')) {
                         const auth = await this.checkAuth({'token': $cookies.get('token'), 'username': $cookies.get('username')})
                         if(auth) {
-                            this.$router.push({path: '/dashboard/charts'})
+                            this.$router.push({path: '/dashboard/query'})
                         }
                     } 
                     if(log.data.error != null) {
