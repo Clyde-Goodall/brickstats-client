@@ -5,7 +5,7 @@ import getIp from './ip.js';
     //need cookies for auth headers, jwt token stuff
     constructor() {
         console.log('mode: ' + import.meta.env.VITE_NODE_ENV)
-        const base = import.meta.env.VITE_NODE_ENV == 'prod' ? 'https://165.227.220.80:3002/api' : 'https://142.93.74.81:3002/api'
+        const base = import.meta.env.VITE_NODE_ENV == 'prod' ? import.meta.env.VITE_PROD_ADDR : import.meta.env.VITE_DEV_ADDR
         console.log(base)
         this.inst  = axios.create({
             baseURL : base,
