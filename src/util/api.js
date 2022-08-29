@@ -59,7 +59,7 @@ import getIp from './ip.js';
     // {'token': token, 'username': username } 
     // Should really move token to authorization header but it doesn't want to play nicely with me
     async getAuth(data) {
-        const auth = await this.inst.post('/auth', data);
+        const auth = await this.inst.post('auth', data);
         console.log('auth: ' + auth.data.auth);
         const tobool = auth.data.auth === 'true' ?  true : false
         // console.log(typeof(tobool))
