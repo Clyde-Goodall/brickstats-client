@@ -30,7 +30,7 @@
             <!-- BUYER -->
              <div class="filter-section w-full h-auto">
                 <div class="filter">
-                        <p class="qb-text">Buyer</p> <input class="font-bold text-gray-700 w-1/2 h-10 py-0" type="text" v-model="search_params.buyer" name="buyer"/>
+                        <p class="qb-text">Buyer</p> <input class="font-bold text-gray-700 w-1/2 py-0 query-input" type="text" v-model="search_params.buyer" name="buyer"/>
                 </div>
             </div>
             <!-- SOURCES -->

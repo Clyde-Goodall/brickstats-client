@@ -40,7 +40,11 @@ input[type='number'] {
     @apply text-xl outline-none rounded-md border-4 border-pink-200 px-2 text-gray-600 transition-all duration-300;
 }
 input[type='number']:focus, input[type='date']:focus, input[type="text"]:focus, input[type="username"]:focus, input[type="password"]:focus, input[type="email"]:focus {
-    @apply text-xl outline-none rounded-md border-4 border-pink-300 text-gray-600 shadow-md;
+    @apply outline-none rounded-md border-4 border-pink-300 text-gray-600 shadow-md;
+}
+
+.query-input {
+    height: 1rem;
 }
 
 

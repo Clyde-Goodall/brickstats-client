@@ -98,11 +98,11 @@ router.beforeEach(async (to, from, next) => {
   // should fix this elsewhere - /dashboard is simply a base view, must have /charts or details etc... should hopefully be edge case
   if(to.path == '/dashboard/' || to.path == '/dashboard') {
     console.log('To grandmother\'s dashboard we go');
-    return next({path: '/dashboard/charts'});
+    return next({path: '/dashboard/query'});
   }
 
   if(['/ip', '/register', '/', '/login'].includes(to.path) && auth) {
-    return next({path: '/dashboard/charts'});
+    return next({path: '/dashboard/query'});
   }
   // user is not authenicated and is trying to acces  s protected route
   return next();

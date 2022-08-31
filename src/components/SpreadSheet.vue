@@ -22,7 +22,7 @@
                     </button>
                    </div>
                    <div class="detail-section pb-48">
-                        <h1 class="text-4xl font-bold">Order data goes here</h1>
+                        <h1 class="text-4xl font-bold">Order deets go here</h1>
                         <p>bla bla bla</p>
                     </div>
                 </div>
@@ -32,62 +32,62 @@
                 <div v-if="filtered_results.length == 0" class="text-pink-700 w-full h-screen -mt-20 overflow-hidden text-6xl flex font-bold justify-center items-center">
                         <h3>No Results</h3>
                     </div>
-                <div v-if="!details" class="w-full h-full box-border p-5">
+                <div class="w-full h-full box-border p-5">
                     <!-- row item cards -->
                     <div 
                         class="mb-5  bg-white rounded-lg justify-between box-border shadow-lg flex flex-row items-center h-auto flex-wrap" 
                         v-for="row in filtered_results"
                     >
                     
-                    <div class="flex justify-between w-auto">
-                        <div class="amount-container">
-                            <!-- dollar amount -->
-                            <div class="box-border text-2xl rounded-bl-xl">
-                                ${{parseFloat(row.total).toFixed(2)}}
+                        <div class="flex justify-between w-auto">
+                            <div class="amount-container">
+                                <!-- dollar amount -->
+                                <div class="box-border text-2xl rounded-bl-xl">
+                                    ${{parseFloat(row.total).toFixed(2)}}
+                                </div>
                             </div>
-                        </div>
-                        <!-- other data (date, id) -->
-                        <div class="box-border flex items-center ml-6 flex-row align-top w-auto flex-initial">
-                            <svg 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                fill="none" 
-                                viewBox="0 0 24 24" 
-                                strokeWidth={1.5} 
-                                stroke="currentColor" 
-                                class="item-icon"
-                            >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
-                                    />
-                            </svg>
-                            <div class="block flex-wrap w-48 text-gray-700">
-                                {{row.order_date}} 
-                                <!-- Should add a link to the respective site order uri 
-                                    using source type and api_sources -->
-                                <p class="text-gray-500 text-sm font-thin ">{{row.source}}, ID:{{row.order_id}}</p>
-                            </div>
-                        </div>
-                        <!-- buyers, if exists . Limited by api so 🤷‍♂️ -->
-                        <div class="box-border p-3 flex items-center align-top flex-row text-gray-700 rounded-xl">
-                            <svg 
-                                xmlns="http://www.w3.org/2000/svg"
+                            <!-- other data (date, id) -->
+                            <div class="box-border flex items-center ml-6 flex-row align-top w-auto flex-initial">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
                                     fill="none" 
                                     viewBox="0 0 24 24" 
-                                    strokeWidth={1.5}   
-                                    stroke="currentColor"
-                                    class="item-icon">
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" 
-                                />
-                            </svg>
-                            {{row.buyer ? row.buyer : 'N/A'}}
-                        </div>
+                                    strokeWidth={1.5} 
+                                    stroke="currentColor" 
+                                    class="item-icon"
+                                >
+                                    <path 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
+                                        />
+                                </svg>
+                                <div class="block flex-wrap w-48 text-gray-700">
+                                    {{row.order_date}} 
+                                    <!-- Should add a link to the respective site order uri 
+                                        using source type and api_sources -->
+                                    <p class="text-gray-500 text-sm font-thin ">{{row.source}}, ID:{{row.order_id}}</p>
+                                </div>
+                            </div>
+                            <!-- buyers, if exists . Limited by api so 🤷‍♂️ -->
+                            <div class="box-border p-3 flex items-center align-top flex-row text-gray-700 rounded-xl">
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        strokeWidth={1.5}   
+                                        stroke="currentColor"
+                                        class="item-icon">
+                                    <path 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" 
+                                    />
+                                </svg>
+                                {{row.buyer ? row.buyer : 'N/A'}}
+                            </div>
 
-                    </div>
+                        </div>
                 <!-- see more button -->
                         <div class="">
                             <button 
@@ -134,7 +134,9 @@ export default {
             return this.tableData == undefined
         },
         async showDetailView(row) {
+            console.log(row.tid)
             await this.getOrderDetails(row)
+            console.log(this.order_details)
             this.order_info.details
             this.order_info.show_details = true
         },
@@ -144,11 +146,8 @@ export default {
         }
     },
     computed: {
-        ...mapState(['api_sources', 'api_list']),
-        columns() {
-            const cols = Object.keys(this.tableData[0])
-            return cols.filter(c => c != 'tid')
-        },
+        ...mapState(['api_sources', 'api_list', 'order_details']),
+
         // so far: date, price, buyer name
         filtered_results() {
             const mapped_data = Object.keys(this.tableData).map(k => {
@@ -186,36 +185,48 @@ export default {
                     from != '' &&
                     to == '' 
                 ) {
-                    return entry.order_date >= from 
+                    if(entry.order_date >= from) return entry
                 }
                 // filter by to
                 else if(
                     to != '' &&
                     from == ''
                 ) {
-                    return entry.order_date <= to 
+                    if(entry.order_date <= to) return entry
                 }
-                else if(
-                    from == '' &&
-                    to == ''
-                ) {
-                    return entry
-                }
+                // else if(
+                //     from == '' &&
+                //     to == ''
+                // ) {
+                //     return entry
+                // }
                 return entry
             })
             // price filter
             const filtered_by_price = filtered_by_date.filter((entry, i, arr) => {
-                return entry.total >= (price_min != undefined ? price_min : 0) && (
-                    price_max ? entry.total <= (
-                        price_max != undefined ? price_max : 9999999
-                        ) : entry.total)
+                // price filter flags
+                // I think the previous sort was only filtering specific object properties and not lining up.
+                // Not filtering entire objects, so detail grabbing was not working properly
+                // I could be wrong, not entirely sure how Array.filter works under the hood
+
+                if(
+                    typeof price_max != 'number' &&
+                    (typeof price_min != 'number' || price_min == 0)
+                ) {
+                    return true
+                }
+                const min_val = (price_min > 0 && typeof price_min == 'number') ? price_min : 0
+                const max_val = (price_max > 0 && typeof price_max == 'number') ? price_max : (entry.total + 1)
+                console.log(`${min_val} < ${entry.total} < ${max_val}`)
+
+                return entry.total >= min_val && entry.total <= max_val
             })
             // user search
             const filtered_by_buyer = filtered_by_price.filter((entry, i, arr) => {
                 return ((buyer != '') && (buyer != undefined)) ? (entry.buyer.includes(buyer) ): entry
             })
 
-            const final = filtered_by_buyer.map(({tid, ...attrs}) => attrs)
+            const final = filtered_by_buyer.map(({...attrs}) => attrs)
             this.storeTableData(final)
             return final
         },
