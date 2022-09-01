@@ -1,12 +1,13 @@
+import { rewriteDefault } from 'vue/compiler-sfc';
 import axios from '../middleware/interceptors.js';
 import getIp from './ip.js';
 
  export default class Api {
     //need cookies for auth headers, jwt token stuff
     constructor() {
-        console.log('mode: ' + import.meta.env.VITE_NODE_ENV)
+        // console.log('mode: ' + import.meta.env.VITE_NODE_ENV)
         const base = import.meta.env.VITE_NODE_ENV == 'prod' ? import.meta.env.VITE_PROD_ADDR : import.meta.env.VITE_DEV_ADDR
-        console.log(base)
+        // console.log(base)
         this.inst  = axios.create({
             baseURL : base,
             headers: {
@@ -70,19 +71,19 @@ import getIp from './ip.js';
     // API Entry CRUD
     // 
     async getUserApiList(data) {
-        console.log(this.inst.defaults.headers);
+        // console.log(this.inst.defaults.headers);
         const list = await this.inst.post('/api-list', data);
         return list.data;
     }
     // adds new
     async submitSingleApi(data) {
-        console.log(data);
+        // console.log(data);
         const entry = await this.inst.post('/add-source', data)
         return entry.data
     }    
     // updates existing
     async updateApiEntry(data) {
-        console.log(data);
+        // console.log(data);
         const entry = await this.inst.post('/update-source', data)
         return entry.data
     }
@@ -92,12 +93,12 @@ import getIp from './ip.js';
     }
     // multiple orders
     async getOrderData(data) {
-        console.log(data)
+        // console.log(data)
         return await this.inst.post('/get-orders', data)
     }
     // single order
     async getOrderDetails(data) {
-        console.log(data)
+        // console.log(data)
         const res = await this.inst.post('/get-order-details', data)
         return res.data
     }

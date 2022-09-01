@@ -249,11 +249,9 @@ export let store = createStore({
         },
         // gets individual order details
         async getOrderDetails({commit, state}, data) {
-            if(Object.keys(state.order_details).length == 0) {
-                console.log('getting order for ' + data.order_id)
-
+            if(Object.keys(state.order_details).length == 0 || state.order_details.order_id != data.order_id) {
                 const res =  await inst.getOrderDetails(data)
-                commit('setOrderDetails', res)
+                commit('setOrderDetails', res.data)
             }
         },
         // gets all orders for each api entry to serve independently
@@ -290,3 +288,42 @@ export let store = createStore({
         },
     }
 });
+
+// order detail available info
+//         # BILLING
+//         order_details['billing_postal_code']
+//         order_details['billing_street_1']
+//         order_details['billing_street_2']
+//         order_details['billing_region']
+
+//         # BUYER
+//         order_details['buyer_email']
+//         order_details['buyer_id']
+//         order_details['buyer_username']
+//         order_details['buyer_phone']
+
+//         # ORDER
+//         order_details['order_lots']
+//         order_details['order_quantity']
+//         order_details['order_subtotal'] 
+//         order_details['order_total']
+//         order_details['order_timestamp']
+//         order_details['order_weight']
+//         order_details['order_method'] 
+//         order_details['order_fee']
+//         order_details['order_currency']
+//         order_details['order_sales_tax']
+
+//         # SHIPPING
+//         order_details['shipping_city']
+//         order_details['shipping_country']
+//         order_details['shipping_country_code']
+//         order_details['shipping_postal_code']
+//         order_details['shipping_region']
+//         order_details['shipping_street_1']
+//         order_details['shipping_street_2']
+//         order_details['shipping_total']
+//         order_details['shipping_status']
+//         # order_details['shipping_status_id']
+//         order_details['shipping_status'] 
+//         order_details['shipping_tracking_number']

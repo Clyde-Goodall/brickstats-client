@@ -20,10 +20,87 @@
                             />
                         </svg>
                     </button>
-                   </div>
-                   <div class="detail-section pb-48">
-                        <h1 class="text-4xl font-bold">Order deets go here</h1>
-                        <p>bla bla bla</p>
+                    </div>
+                    <!-- order details spit out here -->
+                    <div class="detail-section pb-48">
+                        <div class="detail-info-section">
+                            <h1>{{order_details.buyer_username}}'s order</h1>
+                            <h3 class="text-2xl text-gray-500">{{order_details.order_timestamp}}</h3>
+                        </div>
+                        <div class="detail-info-section flex justify-start flex-row items-center box-border p-5 rounded-3xl shadow-md w-auto border-2 border-gray-200">
+                            <div 
+                                class="ship-status-card" 
+                                :class="{
+                                    'status-paid': paid(),
+                                    'status-shipped': shipped(),
+                                    'status-completed': completed()
+                                    }"
+                            >
+                                PAID
+                            </div>
+                            <div 
+                                class="ship-status-linker-bar"
+                                :class="{
+                                        'status-shipped': shipped(),
+                                        'status-completed': completed()
+                                    }"
+                            ></div>
+                            <div 
+                                class="ship-status-card" 
+                                :class="
+                                    {
+                                        'status-shipped': shipped(),
+                                        'status-completed': completed()
+                                    }"
+                            >
+                                SHIPPED
+                            </div>
+                            <div 
+                                class="ship-status-linker-bar"
+                                :class="{
+                                        'status-completed': completed()
+                                    }"
+                            ></div>
+                            <div 
+                                class="ship-status-card" 
+                                :class="{
+                                        'status-completed': completed()
+                                    }"
+                            >
+                                DELIVERED
+                            </div>
+                        </div>
+                        <div class="detail-info-section">
+                            <h2>Shipping</h2>
+                            <p>
+                                <span v-if="order_details.shipping_street_1">
+                                    {{order_details.shipping_street_1 + ', '}} 
+                                </span>
+                            </p>
+                            <p>
+                                <span v-if="order_details.shipping_street_2">
+                                    {{order_details.shipping_street_2 + ', '}} 
+                                </span>
+                            </p>
+                            <p>
+                                <span v-if="order_details.shipping_city">
+                                    {{order_details.shipping_city + ' '}} 
+                                </span>
+                                <span v-if="order_details.shipping_region">
+                                    {{order_details.shipping_region + ' '}} 
+                                </span>
+                                <span v-if="order_details.shipping_postal_code">
+                                    {{order_details.shipping_postal_code + ' '}} 
+                                </span>
+                            
+                            </p>
+                            <p>
+                                <span v-if="order_details.shipping_country_code">
+                                    {{ country_code(order_details.shipping_country_code) }} 
+                                </span>
+                            </p>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -115,6 +192,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import code_to_country from '../util/countries.js';
 
 export default {
     name: 'SpreadSheet',
@@ -134,20 +212,36 @@ export default {
             return this.tableData == undefined
         },
         async showDetailView(row) {
-            console.log(row.tid)
             await this.getOrderDetails(row)
-            console.log(this.order_details)
             this.order_info.details
             this.order_info.show_details = true
         },
         hideDetailView() {
             this.order_info.show_details = false
+        },
+        country_code(code) {
+            return code_to_country(code)
+        },
+        paid() {
+            return this.order_details.shipping_status == 'paid' ||
+                this.order_details.shipping_status == 'PAID' ||
+                this.order_details.shipping_status == 'Payment Received' ||
+                this.order_details.shipping_status == 'PAYMENT RECEIVED'
 
-        }
+        },
+        shipped() {
+            return this.order_details.shipping_status == 'shipped' ||
+                this.order_details.shipping_status == 'SHIPPED'
+        },
+        completed() {
+            return this.order_details.shipping_status == 'completed' ||
+                this.order_details.shipping_status == 'COMPLETED' ||
+                this.order_details.shipping_status == 'delivered' ||
+                this.order_details.shipping_status == 'DELIVERED'
+        },
     },
     computed: {
         ...mapState(['api_sources', 'api_list', 'order_details']),
-
         // so far: date, price, buyer name
         filtered_results() {
             const mapped_data = Object.keys(this.tableData).map(k => {
@@ -217,7 +311,6 @@ export default {
                 }
                 const min_val = (price_min > 0 && typeof price_min == 'number') ? price_min : 0
                 const max_val = (price_max > 0 && typeof price_max == 'number') ? price_max : (entry.total + 1)
-                console.log(`${min_val} < ${entry.total} < ${max_val}`)
 
                 return entry.total >= min_val && entry.total <= max_val
             })
@@ -262,6 +355,21 @@ export default {
     @apply w-4/5 mb-24;
 }
 
+.detail-info-section {
+    @apply my-5;
+}
+.detail-info-section p {
+    @apply text-lg;
+}
+
+.detail-info-section h1 {
+    @apply text-6xl font-bold mb-1;
+}
+
+.detail-info-section h2 {
+    @apply text-4xl font-bold mb-3;
+}
+
 .amount-container {
     @apply flex shadow-md rounded-lg m-3 p-3 w-36 text-lg items-center justify-center bg-green-300 text-green-900 border-2 border-green-700 overflow-scroll;
 }
@@ -272,6 +380,26 @@ export default {
 
 .icon-button {
     /*  */
+}
+
+.ship-status-card {
+    @apply w-48 h-24 box-border p-4 rounded-2xl flex justify-center items-center bg-gray-300 text-white font-black text-2xl;
+}
+
+.ship-status-linker-bar {
+    @apply m-0 p-0 h-8 w-16 bg-gray-300;
+}
+
+.status-paid {
+    @apply bg-purple-400 text-white;
+}
+
+.status-shipped {
+    @apply bg-blue-400 text-white;
+}
+
+.status-completed {
+    @apply bg-green-400 text-white;
 }
 
 /* animations */
