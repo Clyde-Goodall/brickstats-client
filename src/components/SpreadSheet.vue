@@ -1,5 +1,6 @@
 <template>
     <div class="w-full h-full">
+        <!-- Much of this shuld be further broke up into components -->
         <Transition name="in" mode="out-in" appear>
             <div v-if="order_info.show_details" class="w-full h-full flex justify-center items-center overflow-scrol">
                 <div class="detail-container mr-16 p-5">
@@ -27,7 +28,7 @@
                             <h1>{{order_details.buyer_username}}'s order</h1>
                             <h3 class="text-2xl text-gray-500">{{order_details.order_timestamp}}</h3>
                         </div>
-                        <div class="detail-info-section flex justify-start flex-row items-center box-border p-5 rounded-3xl shadow-md w-auto border-2 border-gray-200">
+                        <div class="detail-info-section flex justify-center flex-row items-center box-border p-5 rounded-3xl shadow-md w-auto border-2 border-gray-200">
                             <div 
                                 class="ship-status-card" 
                                 :class="{
@@ -70,7 +71,8 @@
                                 DELIVERED
                             </div>
                         </div>
-                        <div class="detail-info-section">
+                        <!-- shipping breakdown -->
+                        <div class="subcategory">
                             <h2>Shipping</h2>
                             <p>
                                 <span v-if="order_details.shipping_street_1">
@@ -100,6 +102,33 @@
                                 </span>
                             </p>
                         </div>
+                        <!-- Pricing information -->
+                        <div class="subcategory">
+                            <h2>Price Breakdown</h2>
+                            <p>
+                                <span v-if="order_details.shipping_street_1">
+                                    {{order_details.shipping_street_1 + ', '}} 
+                                </span>
+                            </p>
+                            <p>
+                                <span v-if="order_details.shipping_street_2">
+                                    {{order_details.shipping_street_2 + ', '}} 
+                                </span>
+                            </p>
+                            <p>
+                                <span v-if="order_details.shipping_city">
+                                    {{order_details.shipping_city + ' '}} 
+                                </span>
+                                <span v-if="order_details.shipping_region">
+                                    {{order_details.shipping_region + ' '}} 
+                                </span>
+                                <span v-if="order_details.shipping_postal_code">
+                                    {{order_details.shipping_postal_code + ' '}} 
+                                </span>
+                            
+                            </p>
+
+                        </div>
                         
                     </div>
                 </div>
@@ -109,13 +138,12 @@
                 <div v-if="filtered_results.length == 0" class="text-pink-700 w-full h-screen -mt-20 overflow-hidden text-6xl flex font-bold justify-center items-center">
                         <h3>No Results</h3>
                     </div>
-                <div class="w-full h-full box-border p-5">
+                <div class="result-container w-full h-full box-border p-5">
                     <!-- row item cards -->
-                    <div 
-                        class="mb-5  bg-white rounded-lg justify-between box-border shadow-lg flex flex-row items-center h-auto flex-wrap" 
+                    <div
+                        class="result border-t border-gray-300 bg-white justify-between box-border shadow-lg flex flex-row items-center h-auto flex-wrap"
                         v-for="row in filtered_results"
                     >
-                    
                         <div class="flex justify-between w-auto">
                             <div class="amount-container">
                                 <!-- dollar amount -->
@@ -239,6 +267,26 @@ export default {
                 this.order_details.shipping_status == 'delivered' ||
                 this.order_details.shipping_status == 'DELIVERED'
         },
+        avg_bricklink_fee() {
+            fee = 0
+            let summed = this.tableData.slice(0, 30).reduce((s, n) => {
+                return s + (n.total * 0.7)
+            })
+
+            console.log(summed)
+            const remainder = summed % 500
+
+            if(summed < 500) {
+                fee = summed * .03
+            }
+            else if(remainder > 0 && summed < 1000) {
+                fee = 15 + (remainder * .02)
+            }
+            else {
+                fee = 25 + (remainder * .01)
+            }
+            return fee
+        }
     },
     computed: {
         ...mapState(['api_sources', 'api_list', 'order_details']),
@@ -358,15 +406,20 @@ export default {
 .detail-info-section {
     @apply my-5;
 }
-.detail-info-section p {
+
+.subcategory {
+    @apply mt-16;
+}
+
+.detail-info-section p, .subcategory p {
     @apply text-lg;
 }
 
-.detail-info-section h1 {
+.detail-info-section h1, .subcategory h1 {
     @apply text-6xl font-bold mb-1;
 }
 
-.detail-info-section h2 {
+.detail-info-section h2, .subcategory h2 {
     @apply text-4xl font-bold mb-3;
 }
 
@@ -377,6 +430,15 @@ export default {
 .item-icon {
     @apply w-14 h-14 mr-3 text-gray-600;
 }
+
+.result:first-child {
+    @apply rounded-t-lg border-0;
+}
+
+.result:last-child {
+    @apply rounded-b-lg;
+}
+
 
 .icon-button {
     /*  */
