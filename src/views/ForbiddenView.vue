@@ -22,7 +22,7 @@ export default {
     },
     computed: {
         //refer to mapped function with this.thing i.e. this.isDataAvailable
-        ...mapGetters(['isDataAvailable'])
+        ...mapGetters('base', ['isDataAvailable'])
     }
 }
 </script>

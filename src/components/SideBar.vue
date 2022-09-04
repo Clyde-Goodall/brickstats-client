@@ -1,7 +1,7 @@
 <template>
 <!-- To be used as a sub router for the dashboard. ALL menu items go here.
  In the future I might want a dynamic item generation for the sidebar based on permissions and routes but it's overkill so idc yet-->
-    <div class="max-w-96 w-auto bg-pink-500 text-white h-full overflow-y-hidden flex-1 -z-10">
+    <div class="sidebar-container">
         <!-- upper menu -->
         <div class="upper flex-1">
             <a class="opt" name="details" @click="swapView('apis')">
@@ -21,10 +21,14 @@
                  <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z" />
                 </svg>
             </a>
-            <a class="opt" name="details" @click="swapView('details')">
+            <a class="opt" name="details" @click="swapView('collections')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="nav-icon">
-                    <path fill-rule="evenodd" d="M10.5 3.798v5.02a3 3 0 01-.879 2.121l-2.377 2.377a9.845 9.845 0 015.091 1.013 8.315 8.315 0 005.713.636l.285-.071-3.954-3.955a3 3 0 01-.879-2.121v-5.02a23.614 23.614 0 00-3 0zm4.5.138a.75.75 0 00.093-1.495A24.837 24.837 0 0012 2.25a25.048 25.048 0 00-3.093.191A.75.75 0 009 3.936v4.882a1.5 1.5 0 01-.44 1.06l-6.293 6.294c-1.62 1.621-.903 4.475 1.471 4.88 2.686.46 5.447.698 8.262.698 2.816 0 5.576-.239 8.262-.697 2.373-.406 3.092-3.26 1.47-4.881L15.44 9.879A1.5 1.5 0 0115 8.818V3.936z" clip-rule="evenodd" />
+                    <path d="M21 6.375c0 2.692-4.03 4.875-9 4.875S3 9.067 3 6.375 7.03 1.5 12 1.5s9 2.183 9 4.875z" />
+                    <path d="M12 12.75c2.685 0 5.19-.586 7.078-1.609a8.283 8.283 0 001.897-1.384c.016.121.025.244.025.368C21 12.817 16.97 15 12 15s-9-2.183-9-4.875c0-.124.009-.247.025-.368a8.285 8.285 0 001.897 1.384C6.809 12.164 9.315 12.75 12 12.75z" />
+                    <path d="M12 16.5c2.685 0 5.19-.586 7.078-1.609a8.282 8.282 0 001.897-1.384c.016.121.025.244.025.368 0 2.692-4.03 4.875-9 4.875s-9-2.183-9-4.875c0-.124.009-.247.025-.368a8.284 8.284 0 001.897 1.384C6.809 15.914 9.315 16.5 12 16.5z" />
+                    <path d="M12 20.25c2.685 0 5.19-.586 7.078-1.609a8.282 8.282 0 001.897-1.384c.016.121.025.244.025.368 0 2.692-4.03 4.875-9 4.875s-9-2.183-9-4.875c0-.124.009-.247.025-.368a8.284 8.284 0 001.897 1.384C6.809 19.664 9.315 20.25 12 20.25z" />
                 </svg>
+
             </a>
         </div>
         <!-- lower menu -->
@@ -74,6 +78,10 @@ export default {
 </script>
 
 <style scoped>
+
+.sidebar-container {
+    @apply w-auto bg-pink-500 text-white h-full overflow-y-hidden flex-1 -z-10 transition-all duration-300;
+}
  .opt {
    @apply block text-white drop-shadow-sm outline-none no-underline cursor-pointer text-xl p-5 box-border uppercase;
     text-align:left;
@@ -82,10 +90,12 @@ export default {
  .nav-icon {
     @apply w-8 h-8;
  }
-  .opt:hover {
-   @apply bg-pink-600;
+
+ .opt {
+    @apply overflow-hidden box-border hover:bg-pink-600 transition-all duration-200 hover:pl-2;
  }
+
   .opt:active {
-   @apply bg-pink-700;
+   @apply bg-pink-700 ;
  }
 </style>

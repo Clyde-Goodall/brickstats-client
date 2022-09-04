@@ -82,7 +82,7 @@ export default {
     },
     methods: {
         //makes function to test cred validity available
-        ...mapActions(['initUserOnboard', 'getSources']),
+        ...mapActions('base', ['initUserOnboard', 'getSources']),
         async triggerOnboard() {
             this.onb = null
             this.fetching = true
@@ -123,7 +123,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['api_sources']),
+        ...mapState('base', ['api_sources']),
         getApiSources() {
         return this.api_sources;
         },

@@ -34,11 +34,11 @@
             }
         },
         computed: {
-            ...mapState(['keys'])
+            ...mapState('base', ['keys'])
         },
         methods: {
             //makes function to test cred validity available
-            ...mapActions(['attemptLogin', 'checkAuth']),
+            ...mapActions('base', ['attemptLogin', 'checkAuth']),
             handleEnter(e) {
                 if(this.user.password && this.user.password) {
                     this.triggerLogin()

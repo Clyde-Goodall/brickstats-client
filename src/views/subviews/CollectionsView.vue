@@ -5,41 +5,53 @@
     <div class="w-full bg-pink-600 fixed block px-5 z-10">
         <!-- supported API selector
          -->
-        <select name="API Selector" v-model="selected" class="w-1/4">
-                <option v-for="o in getApiSources" :key="o.id" :value="o.name">{{o.name}}</option>
-            </select>
-        <input type="button" class="non-submit-button px-6" value="Add Entry" @click="addEntry"/>
+        <input type="button" class="non-submit-button px-6" value="New Collection" @click="addEntry"/>
     </div>
     <div class="w-full h-24"></div>
 
-    <div class="w-full box-border p-10 flex flex-row flex-wrap ">
+    <div class="w-full h-auto box-border p-10 flex flex-row flex-wrap ">
         <TransitionGroup name="in" mode="out-in" appear>
+        <!-- shows if user has no collections -->
+        <div v-if="collections.length == 0" class="api-crud-card mb-10">
+            <h1 class="mb-10">Collections?</h1>
+            <p>Hi! </p>
+            <p>
+                To track the performance of collections of items, 
+                create a new collection and fill out a few details. 
+            </p>
+            <p>
+                You can then assign items from orders to these and we'll take care of the rest.
+            </p>
 
+        </div>
         <!-- User API CRUD -->
-        <div class="api-crud-card mb-10" v-for="entry in api_list" :key="entry.api_name">
-            <form class="card-detail-text" :name="entry.api_name" method="#">
-                <h1 class="heading ml-5">{{entry.api_name}}</h1>
+        <div v-else class="api-crud-card mb-10" v-for="coll in collections" :key="coll.name">
+            <form class="card-detail-text" :name="coll.name" method="#">
                 <div class="flex flex-col">
-                    <span class="err-msg" v-if="api_errors[entry.api_name]">
-                        {{ api_errors[entry.api_name] }}
-                    </span>
-                    <div v-if="entry['api_name'] == 'BrickLink'" class="w-full p-0 m-0 flex flex-col">
-                        <label class="cred-label">Title</label>
-                        <input type="text" name="token" placeholder="Entry Title" v-model="entry['title']" @keyup="fetching = false"/>
-                        <label class="cred-label">Token</label>
-                        <input type="text" name="token" placeholder="Token Value" v-model="entry['token']" @keyup="fetching = false"/>
-                        <label class="cred-label">Secret</label>
-                        <input type="text" name="secret" placeholder="Token Secret" v-model="entry['secret']" @keyup="fetching = false"/>
-                        <label class="cred-label">Consumer Token</label>
-                        <input type="text" name="token" placeholder="Consumer Key" v-model="entry['consumer_token']" @keyup="fetching = false"/>
-                        <label class="cred-label">Consumer Secret</label>
-                        <input type="text" name="secret" placeholder="Consumer Secret" v-model="entry['consumer_secret']" @keyup="fetching = false"/>
-                    </div>
-                    <div v-if="entry['api_name'] == 'BrickOwl'" class="w-full p-0 m-0 flex flex-col">
-                        <label class="cred-label">Title</label>
-                        <input type="text" name="token" placeholder="Entry Title" v-model="entry['title']" @keyup="fetching = false"/>
-                        <label class="cred-label">Token</label>
-                        <input type="text" name="token" placeholder="Token Value" v-model="entry['token']" @keyup="fetching = false"/>
+                    <div class="w-auto p-0 m-0 flex flex-col">
+                        <label for="name" class="cred-label">Collection Name</label>
+                        <input id="name" v-model="coll.name" type="text"/>
+                        <label for="cost" class="cred-label">Initial Cost</label>
+                        <input id="cost" v-model="coll.cost" type="text"/>
+                        <label for="date" class="cred-label">Date Purchased</label>
+                        <div class="flex flex-row">
+                            <input id="date" v-model="coll.date" type="date" class="block p-2"/>
+                        </div>
+                        <div class="flex flex-row">
+                            <div class="flex flex-col">
+                                <label for="weight" class="cred-label">Weight</label>
+                                <input id="weight" v-model="coll.weight" type="text" class="block p-2"/>
+                            </div>
+                            <div class="flex flex-col">
+                                <label for="uit" class="cred-label">Unit</label>
+                                <select name="unit" v-model="coll.unit">
+                                    <option value="lbs" selected>Pounds</option>
+                                    <option value="oz">Ounces</option>
+                                    <option value="g">Grams</option>
+                                    <option value="kg">Kilograms</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- crud  -->
@@ -60,12 +72,12 @@ export default {
     name: 'SavedApiView',
     data() {
         return {
-            entries: {},
-            selected: null,
+            unit: 'lb'
         }
     },
     methods: {
-        ...mapActions('base', [
+        ...mapActions('base',
+        [
             'getApiList', 
             'getSources', 
             'addProvisionalEntry', 
@@ -75,12 +87,11 @@ export default {
             'removeEntry'
         ]),
         addEntry() {
-            if(this.selected) {
-                this.addProvisionalEntry({
-                    api_name: this.selected,
-                    new: true,
-                })
-            }
+            this.addProvisionalEntry({
+                api_name: this.selected,
+                new: true,
+            })
+
         },
         async submitChanges(entry) {
             // console.log(entry)
@@ -141,9 +152,9 @@ export default {
         await this.getSources();
     },
     computed: {
-        ...mapState('base', ['api_list', 'api_sources', 'api_errors']),
-        getApiSources() {
-        return this.api_sources;
+        ...mapState('collections', ['collections' ]),
+        getCollections() {
+        return this.collections;
         },
     }
 }

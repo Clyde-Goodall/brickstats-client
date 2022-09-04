@@ -2,7 +2,7 @@
 <!-- this is a container -->
     <div class="w-screen h-screen overflow-auto">
         <div class="w-full h-auto flex justify-center bg-pink-400 overflow-y-scroll">
-            <div class="inner-container w-3/4 overflow-y-scroll">
+            <div class="inner-container w-full overflow-y-scroll">
                 <!-- Put anything you want rendered inside the Body tag wherever you include it in. See: "../views/HomeView.vue" -->
                 <slot>
                     <!-- Fallback -->
@@ -35,7 +35,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['isDataAvailable'])
+        ...mapGetters('base', ['isDataAvailable'])
     }
 }
 </script>
@@ -45,7 +45,7 @@ export default {
     @apply: w-full h-screen bg-slate-50 flex justify-center ;
 }
 .inner-container {
-    @apply min-h-screen bg-white box-border p-5 mx-24 shadow-lg flex pt-24;
+    @apply min-h-screen bg-white box-border p-5 shadow-lg flex pt-24;
 }
 
 

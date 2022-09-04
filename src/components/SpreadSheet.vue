@@ -1,137 +1,9 @@
 <template>
-    <div class="w-full h-full">
+    <div class="w-full h-auto">
         <!-- Much of this shuld be further broke up into components -->
         <Transition name="in" mode="out-in" appear>
             <div v-if="order_info.show_details" class="w-full h-full flex justify-center items-center overflow-scrol">
-                <div class="detail-container mr-16 p-5">
-                    <div class="w-full text-right">
-                    <button @click="hideDetailView()">
-                        <svg 
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="flex-end w-10 h-10"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
-                    </button>
-                    </div>
-                    <!-- order details spit out here -->
-                    <div class="detail-section pb-48">
-                        <div class="detail-info-section">
-                            <h1>{{order_details.buyer_username}}'s order</h1>
-                            <h3 class="text-2xl text-gray-500">{{order_details.order_timestamp}}</h3>
-                        </div>
-                        <div class="detail-info-section flex justify-center flex-row items-center box-border p-5 rounded-3xl shadow-md w-auto border-2 border-gray-200">
-                            <div 
-                                class="ship-status-card" 
-                                :class="{
-                                    'status-paid': paid(),
-                                    'status-shipped': shipped(),
-                                    'status-completed': completed()
-                                    }"
-                            >
-                                PAID
-                            </div>
-                            <div 
-                                class="ship-status-linker-bar"
-                                :class="{
-                                        'status-shipped': shipped(),
-                                        'status-completed': completed()
-                                    }"
-                            ></div>
-                            <div 
-                                class="ship-status-card" 
-                                :class="
-                                    {
-                                        'status-shipped': shipped(),
-                                        'status-completed': completed()
-                                    }"
-                            >
-                                SHIPPED
-                            </div>
-                            <div 
-                                class="ship-status-linker-bar"
-                                :class="{
-                                        'status-completed': completed()
-                                    }"
-                            ></div>
-                            <div 
-                                class="ship-status-card" 
-                                :class="{
-                                        'status-completed': completed()
-                                    }"
-                            >
-                                DELIVERED
-                            </div>
-                        </div>
-                        <!-- shipping breakdown -->
-                        <div class="subcategory">
-                            <h2>Shipping</h2>
-                            <p>
-                                <span v-if="order_details.shipping_street_1">
-                                    {{order_details.shipping_street_1 + ', '}} 
-                                </span>
-                            </p>
-                            <p>
-                                <span v-if="order_details.shipping_street_2">
-                                    {{order_details.shipping_street_2 + ', '}} 
-                                </span>
-                            </p>
-                            <p>
-                                <span v-if="order_details.shipping_city">
-                                    {{order_details.shipping_city + ' '}} 
-                                </span>
-                                <span v-if="order_details.shipping_region">
-                                    {{order_details.shipping_region + ' '}} 
-                                </span>
-                                <span v-if="order_details.shipping_postal_code">
-                                    {{order_details.shipping_postal_code + ' '}} 
-                                </span>
-                            
-                            </p>
-                            <p>
-                                <span v-if="order_details.shipping_country_code">
-                                    {{ country_code(order_details.shipping_country_code) }} 
-                                </span>
-                            </p>
-                        </div>
-                        <!-- Pricing information -->
-                        <div class="subcategory">
-                            <h2>Price Breakdown</h2>
-                            <p>
-                                <span v-if="order_details.shipping_street_1">
-                                    {{order_details.shipping_street_1 + ', '}} 
-                                </span>
-                            </p>
-                            <p>
-                                <span v-if="order_details.shipping_street_2">
-                                    {{order_details.shipping_street_2 + ', '}} 
-                                </span>
-                            </p>
-                            <p>
-                                <span v-if="order_details.shipping_city">
-                                    {{order_details.shipping_city + ' '}} 
-                                </span>
-                                <span v-if="order_details.shipping_region">
-                                    {{order_details.shipping_region + ' '}} 
-                                </span>
-                                <span v-if="order_details.shipping_postal_code">
-                                    {{order_details.shipping_postal_code + ' '}} 
-                                </span>
-                            
-                            </p>
-
-                        </div>
-                        
-                    </div>
-                </div>
+                <OrderDetails @detail-view-status="(shown) => toggleDetails(shown)"/>
             </div>
             <div v-else-if="!order_info.show_details" class=" w-auto h-auto overflow-scroll mb-24 mr-24 flex items-center justify-center">
                 
@@ -193,11 +65,11 @@
                             </div>
 
                         </div>
-                <!-- see more button -->
+                        <!-- see more button -->
                         <div class="">
                             <button 
                                 class="non-submit-button w-12 flex items-center justify-center"
-                                @click="showDetailView(row)"
+                                @click="loadDetails(row)"
                             >
                                     <svg 
                                         xmlns="http://www.w3.org/2000/svg" 
@@ -220,121 +92,75 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import code_to_country from '../util/countries.js';
+import OrderDetails from './OrderDetails.vue';
 
 export default {
-    name: 'SpreadSheet',
-    props: ['tableData', 'search_params'],
+    name: "SpreadSheet",
+    props: ["tableData", "search_params"],
     data() {
         return {
             order_info: {
                 show_details: false,
                 details: {}
             }
-
-        }
+        };
     },
     methods: {
-        ...mapActions(['storeTableData', 'getSources', 'getOrderDetails']),
+        ...mapActions('base', ['storeTableData', 'getSources', 'getOrderDetails', 'getBatchDetails']),
         is_loading() {
-            return this.tableData == undefined
+            return this.tableData == undefined;
         },
-        async showDetailView(row) {
-            await this.getOrderDetails(row)
-            this.order_info.details
-            this.order_info.show_details = true
+        async loadDetails(row) {
+            await this.getOrderDetails(row);
+            this.order_info.show_details = true;
         },
-        hideDetailView() {
-            this.order_info.show_details = false
+        toggleDetails(shown) {
+            console.log('toggling')
+            this.order_info.show_details = shown;
         },
-        country_code(code) {
-            return code_to_country(code)
-        },
-        paid() {
-            return this.order_details.shipping_status == 'paid' ||
-                this.order_details.shipping_status == 'PAID' ||
-                this.order_details.shipping_status == 'Payment Received' ||
-                this.order_details.shipping_status == 'PAYMENT RECEIVED'
-
-        },
-        shipped() {
-            return this.order_details.shipping_status == 'shipped' ||
-                this.order_details.shipping_status == 'SHIPPED'
-        },
-        completed() {
-            return this.order_details.shipping_status == 'completed' ||
-                this.order_details.shipping_status == 'COMPLETED' ||
-                this.order_details.shipping_status == 'delivered' ||
-                this.order_details.shipping_status == 'DELIVERED'
-        },
-        avg_bricklink_fee() {
-            fee = 0
-            let summed = this.tableData.slice(0, 30).reduce((s, n) => {
-                return s + (n.total * 0.7)
-            })
-
-            console.log(summed)
-            const remainder = summed % 500
-
-            if(summed < 500) {
-                fee = summed * .03
-            }
-            else if(remainder > 0 && summed < 1000) {
-                fee = 15 + (remainder * .02)
-            }
-            else {
-                fee = 25 + (remainder * .01)
-            }
-            return fee
-        }
     },
     computed: {
-        ...mapState(['api_sources', 'api_list', 'order_details']),
+        ...mapState('base', ["api_sources", "api_list", "order_details", 'batch_details']),
         // so far: date, price, buyer name
         filtered_results() {
             const mapped_data = Object.keys(this.tableData).map(k => {
-            return this.tableData[k]
-            })
+                return this.tableData[k];
+            });
             // self explanatory
-            const from = this.search_params.date.from
-            const to = this.search_params.date.to 
+            const from = this.search_params.date.from;
+            const to = this.search_params.date.to;
             // subtotal of order
-            const price_min = this.search_params.price.from
-            const price_max = this.search_params.price.to
+            const price_min = this.search_params.price.from;
+            const price_max = this.search_params.price.to;
             // user that bought
-            const buyer = this.search_params.buyer
+            const buyer = this.search_params.buyer;
             // api sources
-            const included = this.search_params.included
-
+            const included = this.search_params.included;
             const filtered_by_source = mapped_data.filter((entry, i, arr) => {
-                if(included != undefined) {
-                    const found = included.find(i => i.tid == entry.tid)
-                    if(found.value) return entry;
+                if (included != undefined) {
+                    const found = included.find(i => i.tid == entry.tid);
+                    if (found.value)
+                        return entry;
                 }
-            })
-
+            });
             const filtered_by_date = filtered_by_source.filter((entry, i, arr) => {
                 //  this can be made better but I"m just trying to get it working right now. Probably slow affff
                 // filter by from & to
-                if(
-                    from != '' &&
-                    to != ''
-                ) {
-                    return entry.order_date >= from && entry.order_date <= to
+                if (from != "" &&
+                    to != "") {
+                    return entry.order_date >= from && entry.order_date <= to;
                 }
                 // filter by from
-                else if(
-                    from != '' &&
-                    to == '' 
-                ) {
-                    if(entry.order_date >= from) return entry
+                else if (from != "" &&
+                    to == "") {
+                    if (entry.order_date >= from)
+                        return true;
                 }
                 // filter by to
-                else if(
-                    to != '' &&
-                    from == ''
-                ) {
-                    if(entry.order_date <= to) return entry
+                else if (to != "" &&
+                    from == "") {
+                    if (entry.order_date <= to)
+                        return entry;
                 }
                 // else if(
                 //     from == '' &&
@@ -342,36 +168,32 @@ export default {
                 // ) {
                 //     return entry
                 // }
-                return entry
-            })
+                return entry;
+            });
             // price filter
             const filtered_by_price = filtered_by_date.filter((entry, i, arr) => {
                 // price filter flags
                 // I think the previous sort was only filtering specific object properties and not lining up.
                 // Not filtering entire objects, so detail grabbing was not working properly
                 // I could be wrong, not entirely sure how Array.filter works under the hood
-
-                if(
-                    typeof price_max != 'number' &&
-                    (typeof price_min != 'number' || price_min == 0)
-                ) {
-                    return true
+                if (typeof price_max != "number" &&
+                    (typeof price_min != "number" || price_min == 0)) {
+                    return true;
                 }
-                const min_val = (price_min > 0 && typeof price_min == 'number') ? price_min : 0
-                const max_val = (price_max > 0 && typeof price_max == 'number') ? price_max : (entry.total + 1)
-
-                return entry.total >= min_val && entry.total <= max_val
-            })
+                const min_val = (price_min > 0 && typeof price_min == "number") ? price_min : 0;
+                const max_val = (price_max > 0 && typeof price_max == "number") ? price_max : (entry.total + 1);
+                return entry.total >= min_val && entry.total <= max_val;
+            });
             // user search
             const filtered_by_buyer = filtered_by_price.filter((entry, i, arr) => {
-                return ((buyer != '') && (buyer != undefined)) ? (entry.buyer.includes(buyer) ): entry
-            })
-
-            const final = filtered_by_buyer.map(({...attrs}) => attrs)
-            this.storeTableData(final)
-            return final
+                return ((buyer != "") && (buyer != undefined)) ? (entry.buyer.includes(buyer)) : entry;
+            });
+            const final = filtered_by_buyer.map(({ ...attrs }) => attrs);
+            this.storeTableData(final);
+            return final;
         },
-    }
+    },
+    components: { OrderDetails }
 }
 </script>
 <style scoped>
@@ -385,42 +207,12 @@ export default {
 .in-enter-active,
 .in-leave-active {
     transition: all .3s ease-out;
-
 }
 
 .in-enter-from,
 .in-leave-to {
     transform: translateY(-10px);
     opacity:0;
-}
-
-/* detail view */
-.detail-container {
-    @apply w-full h-full bg-white flex flex-col items-center p-4;
-}
-
-.detail-section {
-    @apply w-4/5 mb-24;
-}
-
-.detail-info-section {
-    @apply my-5;
-}
-
-.subcategory {
-    @apply mt-16;
-}
-
-.detail-info-section p, .subcategory p {
-    @apply text-lg;
-}
-
-.detail-info-section h1, .subcategory h1 {
-    @apply text-6xl font-bold mb-1;
-}
-
-.detail-info-section h2, .subcategory h2 {
-    @apply text-4xl font-bold mb-3;
 }
 
 .amount-container {
@@ -442,26 +234,6 @@ export default {
 
 .icon-button {
     /*  */
-}
-
-.ship-status-card {
-    @apply w-48 h-24 box-border p-4 rounded-2xl flex justify-center items-center bg-gray-300 text-white font-black text-2xl;
-}
-
-.ship-status-linker-bar {
-    @apply m-0 p-0 h-8 w-16 bg-gray-300;
-}
-
-.status-paid {
-    @apply bg-purple-400 text-white;
-}
-
-.status-shipped {
-    @apply bg-blue-400 text-white;
-}
-
-.status-completed {
-    @apply bg-green-400 text-white;
 }
 
 /* animations */

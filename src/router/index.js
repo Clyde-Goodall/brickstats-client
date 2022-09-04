@@ -6,7 +6,7 @@ const inst = new Api();
 import HomeView from '../views/HomeView.vue';
 import DashboardView from '../views/DashboardView.vue';
 import ChartView from '../views/subviews/ChartView.vue';
-import DetailView from '../views/subviews/DetailView.vue';
+import CollectionsView from '../views/subviews/CollectionsView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import LoginView from '../views/LoginView.vue';
 import SecretView from '../views/SecretView.vue';
@@ -64,9 +64,9 @@ const router = createRouter({
 
         },
         {
-          path: 'details',
-          name: 'Details',
-          component: DetailView,
+          path: 'collections',
+          name: 'Collections',
+          component: CollectionsView,
 
         },
         {

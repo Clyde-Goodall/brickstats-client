@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-row h-auto flex-wrap p-10 justify-center ">
-        <BarChart :cdata="cdata" :options="options" title="Month Totals"></BarChart>
+    <div class="flex flex-row h-full flex-wrap p-10 justify-center items-center">
+        <h1 class="text-8xl text-pink-800 font-bold">Coming Soon</h1>
     </div>
 </template>
 
@@ -36,7 +36,7 @@ export default {
       
     },
     computed: {
-        ...mapState(['transforms_data']),
+        ...mapState('base', ['transforms_data']),
         cdata() {
             return JSON.parse(JSON.stringify(this.transforms_data.monthly));
         }

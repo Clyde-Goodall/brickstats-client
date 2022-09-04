@@ -1,14 +1,7 @@
 <template>
      <!-- quick stat overview -->
-    <div class="w-full box-border p-10 flex flex-row flex-wrap ">
-        <!-- Preferences -->
-        <div class="rounded-lg shadow-md min-w-48 w-1/3 max-w-1/2 box-border p-5">
-            <span class="card-detail-text">User Preferences go here</span>
-        </div>
-    </div>  
-    <!-- itemized -->
-    <div class="min-w-auto max-w-full w-4/5 mx-10">
-   
+     <div class="flex flex-row h-full flex-wrap p-10 justify-center items-center">
+        <h1 class="text-8xl text-pink-800 font-bold">Coming Soon</h1>
     </div>
 </template>
 

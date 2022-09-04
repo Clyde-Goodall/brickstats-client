@@ -101,6 +101,12 @@ import getIp from './ip.js';
         // console.log(data)
         const res = await this.inst.post('/get-order-details', data)
         return res.data
+    } 
+    // multiple
+    async getBatchDetails(data) {
+        // console.log(data)
+        const res = await this.inst.post('/batch-order-details', data)
+        return res.data
     }
     async getFreshOrderData() {
         return await this.inst.post('/get-all-raw')

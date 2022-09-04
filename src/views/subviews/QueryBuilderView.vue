@@ -75,7 +75,7 @@
                 <SpreadSheet :tableData="order_data" :search_params="search_params"/>
         </div>
         <div v-else class="flex-1 h-full flex items-center justify-center">
-            <h1 class="animate-pulse -mt-24 -ml-36 font-bold text-8xl text-gray-800">
+            <h1 class="animate-pulse -mt-24 -ml-36 font-bold text-8xl text-pink-800">
                 Loading
             </h1>
         </div>
@@ -128,7 +128,7 @@ export default {
         this.loaded = true
     },
     methods: {
-        ...mapActions(['getApiList', 'getOrders', 'getSources']),
+        ...mapActions('base', ['getApiList', 'getOrders', 'getSources']),
         // sets data source inclusions on checkbox change
         setIncluded(e, tid) {
             this.search_params.included.forEach(i => {
@@ -159,7 +159,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['api_list', 'order_data', 'api_sources', 'table_data']),
+        ...mapState('base', ['api_list', 'order_data', 'api_sources', 'table_data']),
     }
 }
 </script>

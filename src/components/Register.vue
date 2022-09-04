@@ -55,11 +55,11 @@
             }
         },
         computed: {
-            ...mapState(['keys'])
+            ...mapState('base', ['keys'])
         },
         methods: {
             //makes function to test cred validity available
-            ...mapActions(['attemptRegister', 'checkAuth']),
+            ...mapActions('base', ['attemptRegister', 'checkAuth']),
             goToLogin() {
                 this.$router.push({path: '/login'});
             },  

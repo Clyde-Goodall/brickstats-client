@@ -34,7 +34,7 @@ export default {
         
     },
     methods: {
-        ...mapActions(['getTopSecret']),
+        ...mapActions('base', ['getTopSecret']),
         async pullData() {
             if(this.password !== undefined) {
                 this.submitted = true;
@@ -100,7 +100,7 @@ export default {
         }
     },
     computed: {
-        ...mapState(['secret']),
+        ...mapState('base', ['secret']),
         ordersAvailable() {
            return this.$store.state.secret.orders ? true : false;
         },

@@ -34,7 +34,7 @@ input[type="text"], input[type="username"], input[type="password"], input[type="
     @apply text-xl outline-none rounded-md border-4 border-pink-200  h-12 p-4 text-gray-600 transition-all duration-300;
 }
 input[type='date'] {
-    @apply outline-none rounded-md border-4 border-pink-200 w-auto px-2 text-gray-600 transition-all duration-300;
+    @apply outline-none rounded-md border-4 border-pink-200 px-2 text-gray-600 transition-all duration-300;
 }
 input[type='number'] {
     @apply text-xl outline-none rounded-md border-4 border-pink-200 px-2 text-gray-600 transition-all duration-300;
