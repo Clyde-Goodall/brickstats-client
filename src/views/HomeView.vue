@@ -4,6 +4,7 @@
         <Top :name="this.$route.name"></Top>
         <!-- <Spacer /> -->
         <Splash />
+        <Information />
         <Body width="w-3/4">
             <Onboard />
         </Body>
@@ -21,8 +22,9 @@ import Onboard from '../components/Onboard.vue';
 import Splash from '../components/Splash.vue';
 import Spacer from '../components/Spacer.vue';
 import Footer from '../components/Footer.vue';
+import Information from './subviews/Information.vue';
 export default {
-    components: { Top, Body, Onboard, Splash, Spacer, Footer },
+    components: { Top, Body, Onboard, Splash, Spacer, Footer, Information },
     created() {
     },
     computed: {

@@ -14,10 +14,12 @@
     "chartjs-plugin-zoom": "^1.2.1",
     "dotenv": "^16.0.1",
     "postcss": "^8.4.14",
+    "rellax": "^1.12.1",
     "tailwindcss": "^3.1.4",
     "vue": "^3.2.37",
     "vue-chartjs": "^4.1.1",
     "vue-cookies": "^1.8.1",
+    "vue-rellax": "^0.2.0",
     "vue-route-middleware": "^1.0.7",
     "vue-router": "^4.0.16",
     "vuex": "^4.0.2"

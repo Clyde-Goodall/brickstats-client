@@ -1,17 +1,17 @@
 <template>
-    <div class="w-full bg-pink-900 flex flex-wrap overflow-hidden splash-backdrop splash-rect" ref="splash">
+    <div class="w-full h-screen bg-pink-900 flex flex-wrap overflow-hidden splash-backdrop splash-rect" ref="splash">
         <div class="h-full w-full mt-24">
             <div class="w-full h-full flex flex-wrap splash-rect" v-if="particleVals.length > 0">
-            <div
-                v-for="i in [...Array(num_particles).keys()]" :key="i" :id="particleVals[i].id"
-                class="splash-particle"
-                :class="vals[i].color"
-            >
+                <div
+                    v-for="i in [...Array(num_particles).keys()]" :key="i" :id="particleVals[i].id"
+                    class="splash-particle"
+                    :class="vals[i].color"
+                >
+                </div>
             </div>
         </div>
-        </div>
         
-        <div class="absolute left-0 w-full overlay flex flex-col items-start justify-center box-border pl-24 splash-rect">
+        <div class="absolute left-0 w-full h-screen overlay flex flex-col items-start justify-center box-border pl-24 splash-rect">
             <h1 class="text-white text-7xl font-bold drop-shadow-md">
                 Supercharge your Shipping.
             </h1>
@@ -20,6 +20,7 @@
     </div>
 </template>
 <script>
+
     export default {
         name: 'Splash',
         data() {
@@ -30,8 +31,6 @@
         },
         mounted() {
             this.num_particles = Math.floor(this.$refs['splash'].clientHeight * 3)
-            console.log(this.num_particles)
-            // console.log(this.colorIntervals())
             this.generateParticleVals()
             setInterval(this.regenerateVals, 20)
         },
@@ -39,31 +38,20 @@
             generateParticleVals() {
                 for(let i = 0; i < this.num_particles; i++) {
                     const col = this.colorIntervals()
-                    // console.log(col)
                     this.particleVals.push({
                         id: i,
                         color: 'bg-' + ( col)
                     })
                 }
-                console.log(this.particleVals)
             },
             // picks
             regenerateVals() {
-                console.log('updating')
+                // console.log('updating')
                 const which = Math.floor(Math.random() * (this.num_particles - 1))
                 this.particleVals[which].color = 'bg-' + this.colorIntervals()
                     // console.log(col)
             },
-            // splashArrSize() {
-            //     if(this.$refs['splash']) {
-            //         return Math.floor((this.$refs['splash'].clientHeight) * (this.$refs['splash'].clientWidth))
-            //     }
-            // },
-            async splashWidth() {
-                if(this.$refs['splash']) {
-                    return this.$refs['splash'].clientWidth
-                }
-            },
+            // picks colors based on range
             colorIntervals() {
                 const which = Math.floor(Math.random() * 10)
                 switch(which) {
@@ -92,19 +80,6 @@
             setColor() {
                 return setInterval(this.colorIntervals, 2000)
             },
-            particleClass() {
-                const which = Math.floor(Math.random() * 10)
-                // console.log(which)
-                if(which >= 3 && which <= 6) {
-                    // console.log('yup')
-                    return 'bg-none'
-                }
-                return 'bg-gray-200'
-            },
-            refreshColors() {
-
-            }
-
         },
         computed: {
             vals() {
@@ -113,7 +88,6 @@
         }
     }
 </script>
-
 <style>
 
 .splash-particle {
@@ -122,19 +96,15 @@
     @apply m-2 rounded-full;
 }
 .splash-rect {
-    height: clamp(200px, 100vh, 2000px);
+    height: 100vh;
 }
 .splash-backdrop:after {
     background: rgba(0,0,0, .4);
-
 }
 .overlay {
-   box-shadow: inset 0px 0px 300px 120px rgba(0,0,0,0.3);
+   /* box-shadow: inset 0px 0px 300px 120px rgba(0,0,0,0.3); */
    /* backdrop-filter: blur(3px); */
    /* background: rgba(0,0,0, .2); */
    text-shadow: 0px 3px 25px rgba(0,0,0, .35);
 }
-
-
-
 </style>

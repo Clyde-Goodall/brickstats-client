@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex flex-row p-10">
+    <div class="login-container">
         <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10 ">
             <h1 class="heading">Login</h1>
         </div>
@@ -78,6 +78,11 @@
 
     .heading {
         @apply font-sans my-4 text-pink-500 font-bold;
+    }
+
+    .login-container {
+        @apply flex flex-col p-10;
+        width: clamp()
     }
  
     </style>
