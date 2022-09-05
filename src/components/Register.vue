@@ -30,11 +30,11 @@
         data() {
             return {
                 user: {
-                    username: 'piss',
-                    email: 'piss@gmail.com',
-                    confirm_email: 'piss@gmail.com',
-                    password: 'pisswad',
-                    confirm_password: 'pisswad',
+                    username: '',
+                    email: '',
+                    confirm_email: '',
+                    password: '',
+                    confirm_password: '',
                 },
                 fetching: false,
                 error: {
