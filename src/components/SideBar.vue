@@ -57,14 +57,17 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['checkAuth']),
+        ...mapActions('base', ['checkAuth']),
         swapView(e) {
             if(e == 'logout') {
                 if($cookies.get('token') && $cookies.get('token')) {
                     const auth = this.checkAuth({'token': $cookies.get('token'), 'username': $cookies.get('username')})
                     if(auth != false) {
-                        $cookies.remove('token');
-                        $cookies.remove('username');
+                        $cookies.keys().forEach( k => {
+                            $cookies.remove(k)
+                        })
+                        // $cookies.remove('token');
+                        // $cookies.remove('username');
                     }
                 }
                 this.$router.push({path: '/login'});

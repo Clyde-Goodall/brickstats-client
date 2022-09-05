@@ -136,9 +136,12 @@ export default {
             const buyer = this.search_params.buyer;
             // api sources
             const included = this.search_params.included;
+            // make sure invalid sources don't get in the mix
             const filtered_by_source = mapped_data.filter((entry, i, arr) => {
                 if (included != undefined) {
+                    // there's some kind of mismatch between included and sources?
                     const found = included.find(i => i.tid == entry.tid);
+                    console.log(found)
                     if (found.value)
                         return entry;
                 }

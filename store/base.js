@@ -29,7 +29,8 @@ export const base = {
         api_list: [],
         api_sources: [],
         // pre table filters
-        order_data: [],   
+        order_data: [], 
+        order_reload_flag: true,  
         //  post filters
         table_data: [],
         // all un-standardized api output
@@ -56,7 +57,7 @@ export const base = {
         },
         // update either error or local ecopy
         setUpdatedEntry(state, data) {
-            if(typeof data.error == 'string') {
+            if(['error'].includes(Object.keys(data))) {
                 state.api_errors[data.api_name] = data.error
             }
             else { // gay code
@@ -75,6 +76,7 @@ export const base = {
                             s.tid = data.data.tid
                         }
                         // console.log(state.api_errors[data.data.api_name])
+                        state.order_reload_flag = true;
                         delete state.api_errors[data.data.api_name]
                     })
                 }
@@ -107,6 +109,7 @@ export const base = {
         // sets order data from all sources after sorting
         setOrderData(state, data) {
             state.order_data = data.data
+            state.order_reload_flag = false
         },
         setOrderDetails(state, data) {
             state.order_details = data
@@ -158,6 +161,9 @@ export const base = {
             const reg = await inst.registerUser(data)
             // console.log(reg)
             if(reg.data.token && reg.data.username){
+                $cookies.keys().forEach( k => {
+                    $cookies.remove(k)
+                })
                 $cookies.set('token', reg.data.token)
                 $cookies.set('username', reg.data.username)
             }
@@ -170,6 +176,9 @@ export const base = {
             const login = await inst.loginUser(data)
             // console.log(login.data.token);
             if(login.data.token && login.data.username) {
+                $cookies.keys().forEach( k => {
+                    $cookies.remove(k)
+                })
                 console.log('passed');
                 $cookies.set('token', login.data.token)
                 $cookies.set('username', login.data.username)
@@ -202,13 +211,6 @@ export const base = {
                 return res.data
             }
         },
-        // this would be used to check if an api works before submitting it, but the way it operates now is effectively just
-        // a response from the server that either eorks or shits out an error than does the same thing.
-        // async liveApiCheck(_, data) {
-        //     const res = await inst.liveCheck(data)
-        //     return res.data
-        // },
-
         // 
         //  API CRUD
         //  I should maybe reorder this so it's actually in the order CRUD but I'm lazy :')
@@ -224,7 +226,6 @@ export const base = {
         // updates api cred definitions, mainly through SavedApiView
         async updateSingleApi({commit}, data) {
             const res = await inst.updateApiEntry(data)
-            console.log(res)
             commit('setUpdatedEntry', res);
             return res.data
         },
@@ -232,7 +233,7 @@ export const base = {
         async addProvisionalEntry({commit}, data)  {
             commit('setProvisional', data)
         },
-         // the actual add api function
+         // the actual add api function, same endpoint as update
          async addSingleApi({commit}, data) {
             const res = await inst.submitSingleApi(data)
             commit('setUpdatedEntry', res);
@@ -241,7 +242,7 @@ export const base = {
         },
         // get all order data from user's sources at once
         async getOrders({commit, state}, data) {
-            if(state.order_data.length == 0){
+            if(state.order_data.length == 0 && state.order_reload_flag){
                 const res = await inst.getOrderData(state.api_list)
                 console.log(res.data.data)
                 // sort that bih

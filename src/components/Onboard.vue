@@ -1,43 +1,26 @@
 <template>
-    <div class="w-full flex flex-row p-10 overflow-auto">
-        <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10  ">
-            <h1 class="heading">What is this?</h1>
-            <p>
+    <div class="w-full flex flex-row mt-10 justify-center">
+        <div class="flex flex-col w-1/2 h-3/4 min-h-min center px-10">
+            <h1 class="heading onboard-parallax" data-rellax-speed="-.75">Ok but really, what is this?</h1>
+            <p class="onboard-parallax mt-5" data-rellax-speed="-.5">
                BrickStats is an API integrator and dashboard for checking your Bricklink account metrics with interactive charts in a user-friendly package. <br> Support for other platforms is <i>coming soon</i>.
             </p>
-            <h2 class="heading">Instructions</h2>
-            <p>
-                Please add <b class="drop-shadow-sm">165.227.220.80</b> to Bricklink's API whitelist.
-                This is in <b>heavy beta</b>, so don't expect everything to work super well. 
-                You will also need to get your API credentials to make an account.<br><br>
-                For Bricklink, this can be found <a href="https://www.bricklink.com/v2/login.page?logFolder=h&logSub=&logInTo=https%3A%2F%2Fwww.bricklink.com%2Fv2%2Fapi%2Fregister_consumer.page" target="_">here</a>.<br>
-                This will be used to generate normalized data and provide statistics for sellers.
-
+            <p class="mt-10 onboard-parallax" data-rellax-speed="-.5">Brickstats currently supports:</p>
+            <p class="mt-10 ml-10 onboard-parallax" data-rellax-speed="-.5">
+                
+                <ul class=" list-disc font-bold">
+                    <li v-for="s in this.api_sources">{{s.name}}</li>
+                </ul>
             </p>
-        </div>
-        <div class="flex flex-col w-full px-10 h-auto">
-            <select name="API Selector" v-model="selected" class="input-col">
-                <option v-for="o in getApiSources" :key="o.id" :value="o.name">{{o.name}}</option>
-            </select>
-            <div v-if="selected == 'BrickLink'" class="w-full p-0 m-0">
-                <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
-                <input class="input-col" type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
-                <input class="input-col" type="text" name="secret" placeholder="Token Secret" v-model="key.secret" @keyup="fetching = false"/>
-                <input class="input-col" type="text" name="token" placeholder="Consumer Key" v-model="key.consumer_token" @keyup="fetching = false"/>
-                <input class="input-col" type="text" name="secret" placeholder="Consumer Secret" v-model="key.consumer_secret" @keyup="fetching = false"/>
-            </div>
-            <div v-if="selected == 'BrickOwl'" class="w-full p-0 m-0">
-                <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
-                <input class="input-col" type="text" name="token" placeholder="Token Value" v-model="key.token" @keyup="fetching = false"/>
-            </div>
-            <input type="button" class="add-button input-col" @click="triggerOnboard" value="Add" :disabled="fetching && !error.is">
-
+           
+            <button class="add-button mt-10" @click="this.$router.push('/register')">Register</button>
         </div>
     </div>
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
+import Rellax from "rellax";
 
 export default {
     data() {
@@ -61,7 +44,11 @@ export default {
             selected: 'BrickLink'
         }
     },
-
+    mounted() {
+        const onboard = new Rellax('.onboard-parallax', {
+            center: true
+        })
+    },
     async created() {
         await this.getSources();
         for( let i = 0; i < this.api_sources.length; i++) {
@@ -115,7 +102,8 @@ export default {
                 this.$router.push('/register')
             } else if(this.onb.data == true) {
                 // works and is claimed
-                this.$router.push('/login')
+                this.error.is = true
+                this.error.msg = 'This API is already in use';
             } else {
                 this.fetching = false
                 this.onb = null

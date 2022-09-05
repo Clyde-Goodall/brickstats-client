@@ -1,9 +1,10 @@
 <template>
-    <div class="login-container">
-        <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10 ">
-            <h1 class="heading">Login</h1>
-        </div>
-        <div class="flex flex-col w-full px-10 h-auto">
+    <!-- login container -->
+    <div class="login-container flex items-center w-full">
+        <h1 class="heading">Login</h1>
+        <div class="flex flex-col w-full px-10 h-auto login">
+            <!-- login form. Should probably handle enter key on first input 
+                but I'd rather make a util out of it that handles entire forms -->
             <form class="flex flex-col" method="#" @keyup.enter="handleEnter()">
                 <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
                 <input type="username" name="user" placeholder="Username" v-model="user.username" @keyup="fetching = false"/>
@@ -39,6 +40,7 @@
         methods: {
             //makes function to test cred validity available
             ...mapActions('base', ['attemptLogin', 'checkAuth']),
+            // should be consolidated into triggerLogin
             handleEnter(e) {
                 if(this.user.password && this.user.password) {
                     this.triggerLogin()
@@ -52,13 +54,14 @@
                 if(this.user.username && this.user.password) {
                     this.onb = null
                     this.fetching = true
-                     const log = await this.attemptLogin(this.user) 
+                    const log = await this.attemptLogin(this.user) 
                     if(this.$cookies.get('token') && this.$cookies.get('username')) {
                         const auth = await this.checkAuth({'token': $cookies.get('token'), 'username': $cookies.get('username')})
                         if(auth) {
                             this.$router.push({path: '/dashboard/query'})
                         }
                     } 
+                    // show login error
                     if(log.data.error != null) {
                         this.fetching = false
                         this.error.is = true
@@ -82,7 +85,10 @@
 
     .login-container {
         @apply flex flex-col p-10;
-        width: clamp()
+    }
+
+    .login {
+        width: clamp(300px, 30vw, 700px);
     }
  
     </style>

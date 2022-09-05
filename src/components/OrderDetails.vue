@@ -19,50 +19,73 @@
             </button>
         </div>
         <!-- order details spit out here -->
-        <div class="detail-section pb-48">
+        <div class="detail-section pb-48 transition-all duration-300">
+
             <div class="detail-info-section">
                 <h1>{{order_details.buyer_username}}'s order</h1>
-                <h3 class="text-2xl text-gray-500">{{order_details.order_timestamp}}</h3>
+                <h3 class="text-2xl font-light text-gray-500">{{order_details.order_timestamp}}</h3>
             </div>
             <!-- shipping status container -->
-            <div class="detail-info-section shipping-container">
-                <div 
-                    class="ship-status-card" 
-                    :class="{
-                        'status-paid': paid(),
-                        'status-shipped': shipped(),
-                        'status-completed': completed()
-                        }"
-                >
-                    PAID
-                </div>
-                <div 
-                    class="ship-status-card" 
-                    :class="
-                        {
+                <div class="detail-info-section shipping-container">
+                    <div class="flex flex-row">
+                        <div class="ship-status-card">
+                            Paid
+                        </div>
+                        <div class="ship-status-card">
+                            Shipped
+                        </div>
+                        <div class="ship-status-card">
+                            Completed
+                        </div>
+                    </div>
+                    <div   
+                        class="h-1"
+                        :class="{
+                            'status-paid': paid(),
                             'status-shipped': shipped(),
                             'status-completed': completed()
-                        }"
-                >
-                    SHIPPED
+                        }">
+                    </div>
                 </div>
-                <div 
-                    class="ship-status-card" 
-                    :class="{
-                            'status-completed': completed()
-                        }"
-                >
-                    COMPLETED
-                </div>
-            </div>
             <!-- collection settings -->
-            <div class="w-auto shadow-md border-2 border-gray-300 rounded-lg box-border p-5 flex flex-col">
+            <div class="w-auto shadow-md border-2 border-gray-300 rounded-lg box-border flex flex-col">
                 <!-- will create a row for which collection and how much each item was, 
                     populated if chages have been made -->
                 <!--  -->
-                <span v-for="i in [...Array(order_details.order_quantity).keys()]" :key="i" class="flex flex-row">
-                    <input id="cost" v-model="i.cost" type="text"/>
-                </span>
+                <Transition>
+                <div class="text-gray-500 p-5 flex flex-row items-center transition-all duration-300 select-none cursor-pointer" @click="toggleCollectionVisible()">
+                    <svg :class="{rotated: collectionToggle, 'mr-4': true, 'rotate-transition': true}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-7 h-7">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    <span v-if="!collectionToggle" class=" flex flex-row items-center" >
+                        <p class="text-gray-500">
+                            Show collection properties
+                        </p>
+                    </span>
+                    <span v-else class="flex flex-row items-center">
+                        <p class="text-gray-500">
+                            Hide collection properties
+                        </p>
+                    </span>
+  
+                    </div>
+                </Transition>
+
+
+                <TransitionGroup name="collection-props">
+                    <span
+                        v-if="collectionToggle"
+                        v-for="i in [...Array(order_details.order_quantity).keys()]"
+                        :key="i" 
+                        class="flex flex-row items-center border-t"
+                    >
+                        <p class="ml-5 font-bold font-mono text-gray-500">{{i + 1}}</p>
+                        <input id="cost" v-model="i.cost" type="text" class="w-48" placeholder="cost"/>
+                        <select class="flex-1">
+                            <option selected>Select Collection</option>
+                        </select>
+                    </span>
+                </TransitionGroup>
             </div>
             <!-- shipping breakdown -->
             <div class="subcategory">
@@ -155,19 +178,29 @@
                     <span v-else-if="!platform_fee">
                         <p class="animate-pulse">Loading...</p>
                     </span>
-
+                    
                 </p>
-                <span class="mt-10" v-if="order_details.order_source == 'BrickLink'">
-                    <p style="font-size:9pt;">*Bricklink fee is calculated by orders within a month. The current month will only reflect what orders you have received so far.</p>
+                <p
+                    class="between border-t-2 border-gray-400 my-2 py-2"
+                >
+                    <span>
+                        Approximate Profit: 
+                    </span>
+                    <span  v-if="platform_fee">    
+                        ${{parseFloat(order_details.order_subtotal - platform_fee - order_details.order_sales_tax).toFixed(2)}} 
+                    </span>
+                </p>
+                <span v-if="order_details.order_source == 'BrickLink'">
+                    <p class="mt-10" style="font-size:9pt; line-height:.8rem;">*Bricklink fee is calculated by orders within the span of a month. The current month will only reflect what orders you have received so far. This also means that approximate profit is only, well, approximate.</p>
                 </span>
             </div>
         </div>
     </div>
 </template>
-
 <script>
     import {mapActions, mapState} from 'vuex'
     import code_to_country from '../util/countries.js';
+    import Footer from './Footer.vue';
 
     export default {
         name: 'Detail View',
@@ -178,9 +211,12 @@
                     details: {}
                 },
                 platform_fee: null,
+                collectionToggle: false,
             }
         },
         mounted() {
+            this.getCollections()
+            this.collectionToggle = false
             if(this.order_details.order_source == 'BrickLink') {
                 this.avg_bricklink_fee()
             } 
@@ -193,27 +229,35 @@
         },
         methods: {
             ...mapActions('base', ['batchOrderDetails']),
-            ...mapActions('collections', ['buildCollectionScaffolding']),
+            ...mapActions('collections', ['buildCollectionScaffolding', 'getCollections']),
             toggleShown() {
                 this.$emit('detail-view-status', false)
                 console.log('emitting')
             },
-            country_code(code) {
-            return code_to_country(code)
+            toggleCollectionVisible() {
+                this.collectionToggle = !this.collectionToggle
             },
+            country_code(code) {
+                return code_to_country(code)
+            },
+            // catch all for payment successful
             paid() {
                 console.log(this.order_details.shipping_status)
                 return this.order_details.shipping_status.toLowerCase() == 'paid' ||
                     this.order_details.shipping_status.toLowerCase() == 'payment received'
             },
+            // catch all for item shipped
             shipped() {
                 return this.order_details.shipping_status.toLowerCase() == 'shipped' ||
                 this.order_details.shipping_status.toLowerCase() == 'shipping'
             },
+            // catch all for transaction complete.
+            // for bricklink and brickowl, delivery status is updated by user so not very reliable
             completed() {
                 return this.order_details.shipping_status.toLowerCase() == 'completed' ||
                     this.order_details.shipping_status.toLowerCase() == 'delivered'
             },
+            // calculate bricklink fee for individual order
             async avg_bricklink_fee() {
 
                 const start = new Date(this.order_details.billing_timestamp)
@@ -235,17 +279,14 @@
                         tid: d.tid
                     }
                 })
-                console.log(data)
 
                 // limits to BL orders
                 // limits to last 60 supposing oe ships 2 orders a day. 
                 // Absolutely todo get orders based on timestamp but it's 4am and I'm tired
                 await this.batchOrderDetails(data);                
-                console.log(this.batch_details)
 
                 // base sum for last 30 BL order totals
                 let summed = 0
-                let ratios = []
                 this.batch_details.forEach(n => {
                     // I only have lists of order data with grand totals
                     // so I'm skiming off a % to try to make a hueristic for subtotal 
@@ -268,7 +309,6 @@
                     fee = 25 + (remainder * .01)
                 }
                 // return for just one order. THi swill be the same for each order 
-                console.log(`Remainder: ${remainder}\n Total: ${summed}\n Total monthly fee: ${fee}`)
                 this.platform_fee = parseFloat((this.order_details.order_subtotal/summed) * fee).toFixed(2)
             }
         }  
@@ -290,7 +330,7 @@
 }
 
 .shipping-container {
-    @apply flex justify-center flex-row box-border rounded-full w-auto;
+    @apply shadow-md flex flex-col box-border rounded-lg w-auto h-auto border-t-2 border-l-2 border-r-2 border-gray-300 overflow-hidden;
 }
 
 /* categories below shipping status */
@@ -325,31 +365,47 @@
 /* order shipping status */
 
 .ship-status-card {
-    @apply flex-1 first-letter:w-48 h-24 box-border 
-        p-4 flex justify-center items-center bg-gray-300
-        text-white font-black text-2xl relative border-b-8 border-gray-400;
-    text-shadow: 0px 1px 1px rgba(0,0,0, .4);
+    @apply flex-1 first-letter:w-48 h-12 box-border flex justify-center items-center
+        text-gray-600 text-xl ;
+    /* text-shadow: 0px 1px 1px rgba(0,0,0, .4); */
 }
 
+/* different order statuses */
 .ship-status-card:first-child {
-    @apply rounded-l-full rounded-r-sm;
-}
-.ship-status-card:nth-child(2) {
-    @apply mx-1;
+    @apply rounded-l-md;
 }
 .ship-status-card:last-child {
-    @apply rounded-l-sm rounded-r-full;
+    @apply  rounded-r-md;
 }
 
+/* controls the bottom line div in the shipping status container */
 .status-paid {
-    @apply bg-purple-400  border-purple-500 shadow-md;
+    @apply rounded-bl-md bg-purple-500 w-1/3 rounded-r-full animate-pulse;
 }
 
 .status-shipped {
-    @apply bg-blue-400 border-blue-500 shadow-md;
+    @apply rounded-bl-md bg-blue-500 w-2/3 rounded-r-full animate-pulse;
 }
 
 .status-completed {
-    @apply bg-green-400 border-green-500 shadow-md;
+    @apply rounded-bl-md bg-green-500 w-full;
+}
+
+/* collections */
+.rotated {
+    transform: rotate(45deg);
+}
+.rotate-transition {
+    transition: all .3s;
+}
+
+.collection-props-enter-active,
+.collection-props-leave-active {
+  transition: all 0.3s ease;
+}
+.collection-props-enter-from,
+.collection-props-leave-to {
+    transform:scale(.9) translateX(-30px);
+    opacity: 0;
 }
 </style>

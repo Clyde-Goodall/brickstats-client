@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-screen bg-pink-900 flex flex-wrap overflow-hidden splash-backdrop splash-rect" ref="splash">
+    <div :class="'h-' + splash_height" class="w-full bg-pink-900 flex flex-wrap overflow-hidden splash-backdrop splash-rect" ref="splash">
         <div class="h-full w-full mt-24">
             <div class="w-full h-full flex flex-wrap splash-rect" v-if="particleVals.length > 0">
                 <div
@@ -23,13 +23,16 @@
 
     export default {
         name: 'Splash',
+        props: ['height'],
         data() {
             return {
                 num_particles: 2200,
-                particleVals: []
+                particleVals: [],
+                splash_height: 'screen',
             }
         },
         mounted() {
+            this.splash_height = this.height
             this.num_particles = Math.floor(this.$refs['splash'].clientHeight * 3)
             this.generateParticleVals()
             setInterval(this.regenerateVals, 20)

@@ -5,7 +5,7 @@
     <div class="w-full bg-pink-600 fixed block px-5 z-10">
         <!-- supported API selector
          -->
-        <input type="button" class="non-submit-button px-6" value="New Collection" @click="addEntry"/>
+        <input type="button" class="non-submit-button px-6" value="New Collection" @click="addCollection"/>
     </div>
     <div class="w-full h-24"></div>
 
@@ -75,19 +75,21 @@ export default {
             unit: 'lb'
         }
     },
+    async created() {
+        await this.getCollections()
+    },
     methods: {
-        ...mapActions('base',
+        ...mapActions('collections',
         [
             'getApiList', 
-            'getSources', 
-            'addProvisionalEntry', 
-            'updateSingleApi', 
-            'addSingleApi', 
-            'liveApiCheck',
-            'removeEntry'
+            'getCollections', 
+            'addProvisionalCollection', 
+            'updateSingleCollection', 
+            'addSingleCollection', 
+            'removeCollection'
         ]),
-        addEntry() {
-            this.addProvisionalEntry({
+        addCollection() {
+            this.addProvisionalCollection({
                 api_name: this.selected,
                 new: true,
             })
@@ -146,16 +148,8 @@ export default {
             this.removeEntry(tid)
         }
     },
-    async created() {
-        // fetch user's apis
-        await this.getApiList();
-        await this.getSources();
-    },
     computed: {
         ...mapState('collections', ['collections' ]),
-        getCollections() {
-        return this.collections;
-        },
     }
 }
 </script>

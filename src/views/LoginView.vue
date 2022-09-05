@@ -13,8 +13,9 @@ import { mapActions, mapState, mapGetters } from "vuex";
 import Top from '../components/Top.vue';
 import Body from '../components/Body.vue';
 import Login from '../components/Login.vue';
+import Splash from "../components/Splash.vue";
 
 export default {
-    components: {Login, Top, Body},
+    components: { Login, Top, Body, Splash },
 }
 </script>

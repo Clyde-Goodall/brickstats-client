@@ -1,23 +1,23 @@
 <template>
-    <div class="w-full flex flex-row p-10">
-        <div class="flex flex-col w-full h-3/4 min-h-min border-r center px-10 ">
+    <div class="w-full flex flex-col p-10 justify-center items-center">
+        <div class="flex flex-col register">
             <h1 class="heading">Register</h1>
             <p>
-                Now that we have your API credentials, please complete the registration form to access BrickStats.
+                Now that we have your API credentials, please register.
             </p>
-        </div>
-        <div cass="flex flex-col w-full px-10 h-auto">
-            <form class="flex flex-col" method="#">
-                <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
-                <input type="username" name="token" placeholder="Username" v-model="user.username" @keyup="fetching = false"/>
-                <input type="email" name="email" placeholder="Email" v-model="user.email" @keyup="fetching = false"/>
-                <input type="email" name="confirm-email" placeholder="Confirm Email" v-model="user.confirm_email" @keyup="fetching = false"/>
-                <input type="password" name="password" placeholder="Password" v-model="user.password" @keyup="fetching = false"/>
-                <input type="password" name="confirm-password" placeholder="Confirm Password" v-model="user.confirm_password" @keyup="fetching = false"/>
-                <input type="button" class="add-button" @click="triggerRegister" value="Register" :disabled="fetching && !error.is" />
-                <input type="button" class="non-submit-button" @click="goToLogin" value="Login" />
+            <div cass="flex flex-col px-10 h-auto">
+                <form class="flex flex-col" method="#">
+                    <span class="err-msg animate-bounce transition-all duration-500" v-show="error.is && !fetching">{{ error.msg }}</span>
+                    <input type="username" name="token" placeholder="Username" v-model="user.username" @keyup="fetching = false"/>
+                    <input type="email" name="email" placeholder="Email" v-model="user.email" @keyup="fetching = false"/>
+                    <input type="email" name="confirm-email" placeholder="Confirm Email" v-model="user.confirm_email" @keyup="fetching = false"/>
+                    <input type="password" name="password" placeholder="Password" v-model="user.password" @keyup="fetching = false"/>
+                    <input type="password" name="confirm-password" placeholder="Confirm Password" v-model="user.confirm_password" @keyup="fetching = false"/>
+                    <input type="button" class="add-button" @click="triggerRegister" value="Register" :disabled="fetching && !error.is" />
+                    <input type="button" class="non-submit-button" @click="goToLogin" value="Login" />
 
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -45,14 +45,6 @@
         },
         mounted() {
             console.log(this.keys);
-            if(
-                this.keys.token == null || 
-                this.keys.secret == null || 
-                this.keys.consumer_token == null || 
-                this.keys.consumer_secret == null
-            ) {
-                this.$router.push({path: '/'});
-            }
         },
         computed: {
             ...mapState('base', ['keys'])
@@ -90,8 +82,10 @@
     p {
         @apply text-xl text-gray-600;
     }
-    
- 
+    .register {
+        width: clamp(300px, 40vw, 700px);
+    }
+
     
     .heading {
         @apply font-sans my-4 text-pink-500 font-bold;

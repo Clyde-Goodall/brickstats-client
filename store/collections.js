@@ -1,6 +1,4 @@
-import { createStore } from 'vuex';
-import Api from '../src/util/api.js';
-import getIp from '../src/util/ip.js';
+import Api from '../src/util/collections_api';
 
 const inst = new Api();
 
@@ -22,6 +20,9 @@ export const collections = {
             state.keys.consumer_token = data.consumer_token
             state.keys.consumer_secret = data.consumer_secret
             state.api_name = data.api_name
+        },
+        setCollections(state, data) {
+            state.collections = data
         },
         // update either error or local ecopy
         setUpdatedEntry(state, data) {
@@ -64,9 +65,9 @@ export const collections = {
             state.collections = state.collections.filter( l => l.tid !== tid)
         },
         // sets/gets items on order entries
-        setCollectionItems(state, data) {
+        // setCollectionItems(state, data) {
 
-        }
+        // }
     },
     actions: {
 
@@ -77,6 +78,12 @@ export const collections = {
         async addProvisionalCollection({commit}, data)  {
             commit('setProvisional', data)
         },
+        // get collections
+        async getCollections({commit}) {
+            const collections = await inst.getCollections()
+            commit('setCollections', collections.data)
+        },
+
          // the actual add api function
          async addCollection({commit}, data) {
             const res = await inst.submitSingleApi(data)
@@ -99,7 +106,6 @@ export const collections = {
             commit('setRemoval', tid)
             await inst.deleteApiEntry({data: tid})
         },
-
 
         // COLLECTION ITEM CRUD AND SCAFFOLDING
 

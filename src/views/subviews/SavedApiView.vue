@@ -101,9 +101,11 @@ export default {
                     }
                     console.log('adding new: ' + payload)
                     const updated = await this.addSingleApi(payload);
-                    if(updated.error) {
+                    console.log(['error'].includes(Object.keys(updated)))
+
+                    if(['error'].includes(Object.keys(updated))) {
                         this.api_errors[updated.api_name].is = true
-                        this.api_errors[updated.api_name].msg = updated
+                        this.api_errors[updated.api_name].msg = updated.msg
                     }
                 }
             // not new entry, update instead
@@ -121,8 +123,8 @@ export default {
                 }
                 console.log('updating existing: ' + payload.type)
                 const updated = this.updateSingleApi(payload);
-                
-                if(updated.error) {
+                console.log(['error'].includes(Object.keys(updated)))
+                if(['error'].includes(Object.keys(updated))) {
                     this.api_errors[updated.api_name].is = true
                     this.api_errors[updated.api_name].msg = updated
                 }

@@ -3,7 +3,7 @@
     <div class="w-full">
         <Top :name="this.$route.name"></Top>
         <!-- <Spacer /> -->
-        <Splash />
+        <Splash height="screen"/>
         <Information />
         <Body width="w-3/4">
             <Onboard />
